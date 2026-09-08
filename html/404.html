@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly — Page Not Found</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<link rel="stylesheet" href="../css/404.css">
+</head>
+<body>
+
+<div class="nf-bg">
+  <div class="nf-bg-glow"></div>
+  <div class="nf-bg-grid"></div>
+  <div class="nf-motes" id="nfMotes"></div>
+  <div class="nf-scanline"></div>
+</div>
+
+<main class="nf-main">
+  <div class="nf-content" id="nfContent">
+
+    <a href="index.html#hero" class="nf-logo" id="nfLogo">
+      <img class="nf-logo-img" src="../assets/Logo.webp" alt="Your logo">
+      
+    </a>
+
+    <div class="nf-badge" id="nfBadge">
+      <span class="nf-badge-dot"></span>
+      <span class="nf-badge-code">404</span>
+      <span class="nf-badge-sep">|</span>
+      <span class="nf-badge-label">Page Not Found</span>
+    </div>
+
+    <div class="nf-eyebrow-row" id="nfEyebrowRow">
+      <span class="nf-eyebrow"><span class="nf-eyebrow-dot"></span>Signal Lost</span>
+      <span class="nf-record-badge">Error 404</span>
+    </div>
+
+    <h1 class="nf-title" id="nfTitle">Lost in the<br><span class="hl">noise.</span></h1>
+
+    <p class="nf-sub" id="nfSub">This page isn't part of the risk matrix — it may have been reclassified, retired, or the link was copied down wrong.</p>
+
+    <div class="nf-actions" id="nfActions">
+      <a href="index.html#hero" class="nf-btn nf-btn-primary">
+        Back to Home
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <button type="button" class="nf-btn nf-btn-outline" id="nfGoBack">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        Go Back
+      </button>
+    </div>
+
+    <div class="nf-footer-line" id="nfFooterLine">
+      Error 404 &nbsp;&middot;&nbsp; All Systems Monitored
+    </div>
+
+  </div>
+</main>
+
+<script>
+  /* =========================================================
+     FLOATING MOTES — ambient drifting particles
+     ========================================================= */
+  (function(){
+    const host = document.getElementById('nfMotes');
+    if(!host) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const motes = [];
+    for(let i = 0; i < 18; i++){
+      const m = document.createElement('div');
+      m.className = 'nf-mote';
+      m.style.left = Math.random() * 100 + '%';
+      m.style.top = Math.random() * 100 + '%';
+      host.appendChild(m);
+      motes.push(m);
+    }
+    if(!reduced && typeof gsap !== 'undefined'){
+      motes.forEach(function(m){
+        gsap.to(m, {
+          y: '+=' + (20 + Math.random() * 60),
+          x: '+=' + (Math.random() * 40 - 20),
+          duration: 7 + Math.random() * 7,
+          repeat: -1, yoyo: true, ease: 'sine.inOut', delay: Math.random() * 3
+        });
+      });
+    }
+  })();
+
+  /* =========================================================
+     ENTRANCE TIMELINE
+     ========================================================= */
+  (function(){
+    if(typeof gsap === 'undefined') return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Split the title into per-word mask-reveal spans (same
+    // technique used across the rest of the site).
+    const title = document.getElementById('nfTitle');
+    if(title){
+      const html = title.innerHTML;
+      const lines = html.split('<br>');
+      title.innerHTML = lines.map(function(line){
+        const wrapped = line.replace(/<span class="hl">(.*?)<\/span>/, function(_, w){
+          return '<span class="word-mask"><span class="word-inner hl">' + w + '</span></span>';
+        });
+        if(wrapped.indexOf('word-mask') === -1){
+          return wrapped.split(' ').map(function(w){
+            return '<span class="word-mask"><span class="word-inner">' + w + '</span></span>';
+          }).join(' ');
+        }
+        return wrapped;
+      }).join('<br>');
+    }
+
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    tl.fromTo('#nfLogo', { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration: 0.6 }, 0)
+      .fromTo('#nfBadge', { opacity: 0, scale: .85 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.8)' }, 0.2)
+      .fromTo('#nfEyebrowRow > *', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.08 }, 0.4);
+
+    if(title){
+      gsap.set('#nfTitle .word-inner', { yPercent: 115, rotate: 3 });
+      tl.to('#nfTitle .word-inner', { yPercent: 0, rotate: 0, duration: reduced ? 0.01 : 0.9, stagger: 0.07, ease: 'power4.out' }, 0.55);
+    }
+
+    tl.fromTo('#nfSub', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, 0.95)
+      .fromTo('#nfActions .nf-btn', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 }, 1.1)
+      .fromTo('#nfFooterLine', { opacity: 0 }, { opacity: 1, duration: 0.6 }, 1.35);
+
+    // Ambient pulse on the 404 badge dot and a very slow drift
+    // on the background glow for a "live system" feel.
+    if(!reduced){
+      gsap.to('.nf-bg-glow', { x: 30, y: -20, duration: 14, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+    }
+  })();
+
+  /* =========================================================
+     GO BACK BUTTON
+     ========================================================= */
+  (function(){
+    const btn = document.getElementById('nfGoBack');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+      if(window.history.length > 1){ window.history.back(); }
+      else { window.location.href = 'index.html'; }
+    });
+  })();
+
+  /* =========================================================
+     MAGNETIC HOVER ON PRIMARY BUTTON
+     ========================================================= */
+  (function(){
+    if(typeof gsap === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('.nf-btn').forEach(function(btn){
+      btn.addEventListener('mousemove', function(e){
+        const r = btn.getBoundingClientRect();
+        const relX = (e.clientX - r.left - r.width / 2) * 0.12;
+        const relY = (e.clientY - r.top - r.height / 2) * 0.3;
+        gsap.to(btn, { x: relX, y: relY, duration: 0.3, ease: 'power3.out' });
+      });
+      btn.addEventListener('mouseleave', function(){
+        gsap.to(btn, { x: 0, y: 0, duration: 0.4, ease: 'elastic.out(1,0.5)' });
+      });
+    });
+  })();
+</script>
+</body>
+</html>

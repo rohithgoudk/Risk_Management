@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stackly — User Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../css/dashboard.css" />
+</head>
+<body>
+<div class="dashboard-root">
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <button class="brand-panel" id="brand-home-btn" aria-label="Go to homepage">
+        <span class="brand-logo-slot">
+          <!-- LOGO PLACEHOLDER: swap this src for your logo file -->
+          <img id="brand-logo-img" class="brand-logo-img" src="../assets/Logo.webp" alt="Your logo">
+        </span>
+        
+      </button>
+      <button class="close-btn" id="close-sidebar-btn" aria-label="Close sidebar">✕</button>
+    </div>
+    <div class="sidebar-section-label">Risk Operations</div>
+    <nav class="sidebar-nav" id="nav-main"></nav>
+    <div class="sidebar-section-label">Administration</div>
+    <nav class="sidebar-nav" id="nav-management"></nav>
+
+    <div class="sidebar-user" id="sidebar-user">
+      <div class="sidebar-user-avatar" id="sidebar-user-avatar">–</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebar-user-name">Signed out</div>
+        <div class="sidebar-user-email" id="sidebar-user-email">—</div>
+      </div>
+    </div>
+    <button class="logout-full-btn" id="logout-btn">Sign out</button>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar" id="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger-btn" aria-label="Open menu"><span></span><span></span><span></span></button>
+        <div class="page-title">
+          <h1 id="page-title-text">Overview</h1>
+          <p id="page-sub-text"></p>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-box">
+          <span class="search-icon">⌕</span>
+          <input placeholder="Search risks, analysts, reports…">
+        </div>
+        <button class="icon-btn" id="notif-btn" aria-label="Notices">N<span class="notif-dot"></span></button>
+        <div class="topbar-user" id="topbar-user">
+          <button class="topbar-user-btn" id="topbar-user-btn">
+            <span class="topbar-user-avatar" id="topbar-user-avatar">–</span>
+            <span class="topbar-user-name" id="topbar-user-name">Signed out</span>
+            <span class="topbar-user-caret">▾</span>
+          </button>
+          <div class="topbar-user-menu" id="topbar-user-menu">
+            <div class="topbar-user-menu-email">
+              <div class="label">Email</div>
+              <div class="value" id="topbar-user-email">—</div>
+            </div>
+            <button class="topbar-user-menu-item" data-nav="settings">Settings</button>
+            <button class="topbar-user-menu-item danger" id="topbar-logout-btn">Sign out</button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="content-area" id="content-area"></div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
+  /* ---------- Risk categories ---------- */
+  const riskCategoryAccents = {
+    "Enterprise": "#e8299c",
+    "Operational": "#2dd4bf",
+    "Financial": "#eab308",
+    "Compliance": "#60a5fa",
+    "Cyber": "#f97316"
+  };
+
+  /* ---------- Risk Register (monitored risks) ---------- */
+  const riskRegister = [
+    { id: 1, name: "Single-Source Supplier Dependency", dept: "Operational", term: "Tier 1 Vendors", type: "Core Risk", status: "Active", progress: 72, endDate: "Dec 2025", credits: "High Severity", instructor: "Mara Ilić" },
+    { id: 2, name: "Credential-Stuffing Exposure", dept: "Cyber", term: "Customer Platforms", type: "Emerging Risk", status: "Elevated", progress: 38, endDate: "Nov 2025", credits: "High Severity", instructor: "Daniel Voss" },
+    { id: 3, name: "Cross-Border Data Transfer Rule", dept: "Compliance", term: "EU Operations", type: "Regulatory", status: "Resolved", progress: 100, endDate: "Mar 2025", credits: "Medium Severity", instructor: "Priya Nadar" },
+    { id: 4, name: "FX Rate Volatility", dept: "Financial", term: "APAC Region", type: "Core Risk", status: "Active", progress: 55, endDate: "Oct 2025", credits: "Medium Severity", instructor: "Tom Okafor" },
+    { id: 5, name: "Vendor Access Review Backlog", dept: "Enterprise", term: "Global", type: "Core Risk", status: "Under Review", progress: 89, endDate: "Jul 2025", credits: "Medium Severity", instructor: "Mara Ilić" },
+    { id: 6, name: "Ransomware Targeting Healthcare Sector", dept: "Cyber", term: "Healthcare Vertical", type: "Emerging Risk", status: "Active", progress: 61, endDate: "Sep 2025", credits: "High Severity", instructor: "Daniel Voss" },
+    { id: 7, name: "Credit Concentration — Mid-Cap Industrials", dept: "Financial", term: "North America", type: "Core Risk", status: "Elevated", progress: 45, endDate: "Aug 2025", credits: "Medium Severity", instructor: "Tom Okafor" },
+    { id: 8, name: "Warehouse Automation Parts Lead Time", dept: "Operational", term: "All Regions", type: "Emerging Risk", status: "Active", progress: 28, endDate: "Nov 2025", credits: "Low Severity", instructor: "Priya Nadar" }
+  ];
+
+  /* ---------- Risk Analysts ---------- */
+  const riskAnalysts = [
+    { name: "Mara Ilić", role: "Head of Enterprise Risk", experience: 14, avatar: "MI", status: "active", courses: 2, speciality: "Enterprise & Vendor Risk", email: "m.ilic@stackly.io" },
+    { name: "Tom Okafor", role: "Head of Financial Risk", experience: 11, avatar: "TO", status: "active", courses: 2, speciality: "Market & Credit Risk", email: "t.okafor@stackly.io" },
+    { name: "Priya Nadar", role: "Chief Compliance Officer", experience: 9, avatar: "PN", status: "away", courses: 1, speciality: "Regulatory & Compliance", email: "p.nadar@stackly.io" },
+    { name: "Daniel Voss", role: "Head of Cyber Risk", experience: 7, avatar: "DV", status: "active", courses: 2, speciality: "Cyber & Infrastructure", email: "d.voss@stackly.io" },
+    { name: "Elena Cho", role: "Operational Risk Lead", experience: 6, avatar: "EC", status: "active", courses: 1, speciality: "Operational Resilience", email: "e.cho@stackly.io" },
+    { name: "Marcus Ide", role: "Senior Risk Analyst", experience: 10, avatar: "MI", status: "active", courses: 3, speciality: "Supply Chain Risk", email: "m.ide@stackly.io" },
+    { name: "Aiko Yamada", role: "Risk Intelligence Lead", experience: 8, avatar: "AY", status: "active", courses: 0, speciality: "Research & Signals", email: "a.yamada@stackly.io" }
+  ];
+
+  /* ---------- Action Items (mitigation / remediation tasks) ---------- */
+  const actionItems = [
+    { id: "ACT-1024", name: "Complete vendor risk reassessment", dept: "Operational", category: "Mitigation", date: "Jan 2025", urgency: "High", status: "In Progress" },
+    { id: "ACT-1031", name: "Draft cross-border compliance memo", dept: "Compliance", category: "Documentation", date: "Feb 2025", urgency: "Medium", status: "Open" },
+    { id: "ACT-1044", name: "Close out FX hedge review", dept: "Financial", category: "Remediation", date: "Mar 2025", urgency: "Low", status: "Closed" },
+    { id: "ACT-1052", name: "Finalize access control audit", dept: "Enterprise", category: "Audit", date: "Mar 2025", urgency: "High", status: "In Progress" },
+    { id: "ACT-1067", name: "Patch credential-stuffing vulnerability", dept: "Cyber", category: "Remediation", date: "Apr 2025", urgency: "Medium", status: "Open" },
+    { id: "ACT-1078", name: "Model renewable supplier alternatives", dept: "Operational", category: "Investigation", date: "Apr 2025", urgency: "High", status: "Open" },
+    { id: "ACT-1090", name: "Run healthcare ransomware tabletop drill", dept: "Cyber", category: "Drill", date: "May 2025", urgency: "Medium", status: "In Progress" },
+    { id: "ACT-1103", name: "Review credit concentration thresholds", dept: "Financial", category: "Review", date: "May 2025", urgency: "Low", status: "Closed" }
+  ];
+
+  /* ---------- Risk Reports ---------- */
+  const riskReports = [
+    { title: "Mid-Term Exposure Analysis — Operational Risk", authors: "Ilić, M.", journal: "Operational", year: 2025, status: "Published", reads: 24 },
+    { title: "Cohort Progress: Financial Risk Indicators", authors: "Okafor, T.", journal: "Financial", year: 2025, status: "Published", reads: 41 },
+    { title: "Compliance Posture — Final Summary", authors: "Nadar, P.", journal: "Compliance", year: 2025, status: "Published", reads: 63 },
+    { title: "Cyber Threat Landscape Benchmarking", authors: "Voss, D.", journal: "Cyber", year: 2025, status: "In Review", reads: 0 },
+    { title: "Vendor Risk Assessment Audit", authors: "Ilić, M.", journal: "Enterprise", year: 2024, status: "Published", reads: 18 },
+    { title: "Supply Chain Resilience Report", authors: "Ide, M.", journal: "Operational", year: 2025, status: "In Draft", reads: 0 }
+  ];
+
+  /* ---------- Monitoring Calendar ---------- */
+  const monitoringCalendar = [
+    { date: "Jun 21", event: "Operational — mid-cycle exposure review begins", site: "Operational", type: "urgent" },
+    { date: "Jun 25", event: "Financial — quarterly stress test", site: "Financial", type: "normal" },
+    { date: "Jul 2", event: "Compliance — regulatory filing window opens", site: "Compliance", type: "normal" },
+    { date: "Jul 10", event: "Board risk committee meeting", site: "Boardroom", type: "meeting" },
+    { date: "Jul 18", event: "Cyber — penetration test window opens", site: "Cyber", type: "normal" },
+    { date: "Aug 5", event: "Enterprise — end-of-quarter vendor review", site: "Enterprise", type: "normal" },
+    { date: "Aug 14", event: "All-hands risk briefing", site: "Boardroom", type: "meeting" },
+    { date: "Sep 1", event: "Operational — supply chain audit resumes", site: "Operational", type: "normal" },
+    { date: "Oct 15", event: "Risk register due for Q1 refresh", site: "Risk Office", type: "urgent" }
+  ];
+
+  /* ---------- Budget & Spend ---------- */
+  const budgetData = [
+    { site: "Financial Risk Modeling Tools", allocated: 210000, spent: 118000, dept: "Financial" },
+    { site: "Enterprise GRC Platform License", allocated: 182000, spent: 96000, dept: "Enterprise" },
+    { site: "Compliance Legal Counsel Retainer", allocated: 95000, spent: 95000, dept: "Compliance" },
+    { site: "Cyber Threat Intel Subscription", allocated: 122000, spent: 78000, dept: "Cyber" },
+    { site: "Operational Resilience Tooling", allocated: 140000, spent: 99000, dept: "Operational" },
+    { site: "Risk Analytics Data Feeds", allocated: 176000, spent: 104000, dept: "Enterprise" },
+    { site: "Contingency Reserve", allocated: 68000, spent: 41000, dept: "Financial" }
+  ];
+
+  /* ---------- Resource Library ---------- */
+  const resourceLibrary = [
+    { title: "Stackly Risk Management Playbook 2025", type: "Annual Publication", year: 2025, pages: 96, downloads: 3841 },
+    { title: "Incident Response Handbook", type: "Reference Manual", year: 2023, pages: 148, downloads: 7120 },
+    { title: "Vendor Risk Assessment Guide", type: "Study Guide", year: 2024, pages: 62, downloads: 2450 },
+    { title: "Analyst Onboarding Field Guide", type: "Field Guide", year: 2025, pages: 40, downloads: 5633 },
+    { title: "Regulatory Compliance Handbook", type: "Policy Guide", year: 2023, pages: 110, downloads: 1920 }
+  ];
+
+  /* ---------- Activity Feed ---------- */
+  const activityFeed = [
+    { text: "Operational risk team logged a record 14 vendor reviews this week", time: "2h ago" },
+    { text: "Financial risk score improved 6 points after new hedging policy", time: "4h ago" },
+    { text: "Compliance filing for EU data transfer rule concluded — approved", time: "Yesterday" },
+    { text: "Cyber monitoring flagged a credential-stuffing spike, contained", time: "Yesterday" },
+    { text: "New automated risk-scoring pilot shows early gains", time: "2d ago" },
+    { text: "Q1 risk review targets met across three business units", time: "3d ago" },
+    { text: "Updated vendor access policy published for Enterprise risk", time: "4d ago" }
+  ];
+
+  const navItems = [
+    { label: "Overview", id: "dashboard" },
+    { label: "Risk Register", id: "runs" },
+    { label: "Analysts", id: "teams" },
+    { label: "Action Items", id: "products" },
+    { label: "Reports", id: "reports" },
+    { label: "Calendar", id: "schedule" },
+    { label: "Budget", id: "budget" },
+    { label: "Library", id: "training" },
+    { label: "Settings", id: "settings" }
+  ];
+  const statusColors = { "Active": "status-active", "Elevated": "status-field", "Resolved": "status-complete", "Under Review": "status-review" };
+  const urgencyColor = { "Low": "#22c55e", "Medium": "#eab308", "High": "#ef4444" };
+  const reportStatusColor = { "Published": "#22c55e", "In Review": "#eab308", "In Draft": "#6b6b70" };
+  const scheduleTypeColor = { urgent: "#ef4444", normal: "#e8299c", meeting: "#2dd4bf" };
+  const pageMap = {
+    dashboard: { title: "Overview", sub: "The week across every risk category" },
+    runs:      { title: "Risk Register", sub: "Every risk currently being tracked" },
+    teams:     { title: "Analysts", sub: "Risk analysts & category leads" },
+    products:  { title: "Action Items", sub: "Mitigation tasks & remediation work" },
+    reports:   { title: "Reports", sub: "Assessments & category summaries" },
+    schedule:  { title: "Calendar", sub: "Monitoring calendar & key dates" },
+    budget:    { title: "Budget", sub: "Category spend & allocations" },
+    training:  { title: "Library", sub: "Playbooks, guides & references" },
+    settings:  { title: "Settings", sub: "Profile & preferences" }
+  };
+
+  function getCurrentUser() {
+    try {
+      const raw = localStorage.getItem('user');
+      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+      if (!raw || !isAuthenticated) return null;
+      return JSON.parse(raw);
+    } catch (e) { return null; }
+  }
+  function usernameFromEmail(email) { if (!email) return ''; return email.includes('@') ? email.split('@')[0] : email; }
+  const currentUser = getCurrentUser();
+  const currentEmail = currentUser ? (currentUser.email || '') : '';
+  const currentUsername = currentUser ? usernameFromEmail(currentEmail) : '';
+  const currentInitial = (currentUsername || currentEmail || '?').charAt(0).toUpperCase();
+
+  function paintUserChrome() {
+    const nameToShow = currentUsername || currentEmail || 'Signed out';
+    document.getElementById('sidebar-user-avatar').textContent = currentInitial;
+    document.getElementById('sidebar-user-name').textContent = nameToShow;
+    document.getElementById('sidebar-user-email').textContent = currentEmail || '—';
+    document.getElementById('topbar-user-avatar').textContent = currentInitial;
+    document.getElementById('topbar-user-name').textContent = nameToShow;
+    document.getElementById('topbar-user-email').textContent = currentEmail || '—';
+  }
+  function logout() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('activeNav');
+    localStorage.removeItem('settings');
+    window.location.href = 'login.html';
+  }
+
+  function getSavedNav() {
+    try { const saved = localStorage.getItem('activeNav'); if (saved && pageMap[saved]) return saved; } catch (e) {}
+    return 'dashboard';
+  }
+  function loadSettings() {
+    const defaults = { notifications: true, emailDigest: false, darkMode: true, language: "English" };
+    try { const raw = localStorage.getItem('settings'); if (raw) return Object.assign(defaults, JSON.parse(raw)); } catch (e) {}
+    return defaults;
+  }
+  function saveSettings() { try { localStorage.setItem('settings', JSON.stringify(state.settings)); } catch (e) {} }
+
+  let state = { activeNav: getSavedNav(), runFilter: "All", productSearch: "", settings: loadSettings() };
+
+  function fmt(n) { return "$" + n.toLocaleString(); }
+  function go404() { window.location.href = "404.html"; }
+  function regionTag(dept) { const c = riskCategoryAccents[dept] || "#e8299c"; return `<span class="region-tag" style="color:${c};border-color:${c};background:${c}1a;">${dept}</span>`; }
+
+  function animateStatBars(){
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.stat-bar-fill, .progress-fill').forEach(el => {
+        const target = el.getAttribute('data-w');
+        if (target) el.style.width = target + '%';
+      });
+    });
+  }
+  function gsapEntrance(){
+    if (typeof gsap === 'undefined') return;
+    gsap.killTweensOf('.stat-card, .card, .team-card, .pub-card, .research-card');
+    gsap.set('.stat-card', { opacity: 0, y: 18 });
+    gsap.to('.stat-card', { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out', stagger: 0.06 });
+    gsap.set('.card, .team-card, .pub-card, .research-card', { opacity: 0, y: 22 });
+    gsap.to('.card, .team-card, .pub-card, .research-card', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.05, delay: 0.08 });
+    document.querySelectorAll('.stat-value').forEach(el => {
+      const raw = el.textContent.trim();
+      const match = raw.match(/^([^\d]*)([\d,]+\.?\d*)(.*)$/);
+      if (!match) return;
+      const prefix = match[1], numStr = match[2].replace(/,/g, ''), suffix = match[3];
+      const num = parseFloat(numStr);
+      if (isNaN(num)) return;
+      const isInt = Number.isInteger(num) && !numStr.includes('.');
+      const counter = { val: 0 };
+      gsap.to(counter, {
+        val: num, duration: 1.1, ease: 'power2.out', delay: 0.15,
+        onUpdate: () => { const shown = isInt ? Math.round(counter.val).toLocaleString() : counter.val.toFixed(1); el.textContent = prefix + shown + suffix; },
+        onComplete: () => { el.textContent = raw; }
+      });
+    });
+  }
+
+  function renderDashboard() {
+    const stats = [
+      { delta: "+3 this month", value: "34", label: "Active Risks Tracked", bar: 72, accent: true },
+      { delta: "+18 this week", value: "142", label: "Open Action Items", bar: 64 },
+      { delta: "On track", value: "$1.2M", label: "Annual Risk Program Budget", bar: 88 },
+      { delta: "+2 new hires", value: "18", label: "Risk Analysts", bar: 90 }
+    ];
+    const statsHtml = stats.map((s, i) => `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"><span></span><span class="stat-delta up">${s.delta}</span></div>
+        <div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${s.bar}"></div></div>
+      </div>`).join("");
+
+    const rows = riskRegister.slice(0, 5).map(t => `<tr onclick="go404()">
+        <td><div class="t-name">${t.name}</div><div class="t-sub">${t.term} · ${t.instructor}</div></td>
+        <td>${regionTag(t.dept)}</td>
+        <td class="type-col">${t.type}</td>
+        <td><span class="status-badge ${statusColors[t.status]}">${t.status}</span></td>
+        <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" data-w="${t.progress}"></div></div><span class="progress-pct">${t.progress}%</span></div></td>
+        <td class="date-col">${t.endDate}</td>
+        <td class="budget-col">${t.credits}</td>
+      </tr>`).join("");
+
+    const feedHtml = activityFeed.map(a => `<li class="activity-item" onclick="go404()">
+        <span class="act-icon">§</span>
+        <div class="act-body"><p class="act-text">${a.text}</p><span class="act-time">${a.time}</span></div>
+      </li>`).join("");
+
+    const teamHtml = riskAnalysts.slice(0, 5).map(m => `<li class="team-item" onclick="go404()">
+        <div class="member-avatar">${m.avatar}<span class="online-dot dot-${m.status}"></span></div>
+        <div class="member-info"><div class="member-name">${m.name}</div><div class="member-role">${m.role}</div></div>
+        <div class="member-projects"><span class="proj-count">${m.experience}</span><span class="proj-label">yrs</span></div>
+      </li>`).join("");
+
+    const milestones = [
+      { site: "Operational Risk", event: "Mid-cycle exposure review begins", date: "Jun 21", done: false, urgent: true },
+      { site: "Financial Risk", event: "Quarterly stress test", date: "Jun 25", done: false, urgent: false },
+      { site: "Compliance", event: "Regulatory filing window opens", date: "Jul 2", done: false, urgent: false },
+      { site: "Operational Risk", event: "Supply chain audit resumes", date: "Sep 01", done: false, urgent: false },
+      { site: "Compliance", event: "EU data transfer filing submitted", date: "Jun 14", done: true, urgent: false }
+    ];
+    const msHtml = milestones.map(m => {
+      const parts = m.date.split(" ");
+      return `<li class="milestone-item ${m.done ? "ms-done" : ""}" onclick="go404()">
+        <div class="ms-date"><span>${parts[0]}</span><span>${parts[1]}</span></div>
+        <div class="ms-line"><div class="ms-dot"></div></div>
+        <div class="ms-body"><div class="ms-event">${m.event}</div><div class="ms-project">${m.site}</div></div>
+        ${m.urgent ? '<span class="ms-tag">Urgent</span>' : ''}
+        ${m.done ? '<span class="ms-tag ms-done-tag">Done</span>' : ''}
+      </li>`;
+    }).join("");
+
+    return `
+      <section class="stats-grid">${statsHtml}</section>
+      <section class="mid-grid">
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">Risks In Focus</h2><p class="card-sub">Current exposure across every category</p></div></div>
+          <div class="table-wrapper"><table class="runs-table"><thead><tr><th>Risk</th><th>Category</th><th>Type</th><th>Status</th><th>Mitigation</th><th>Next Review</th><th>Severity</th></tr></thead><tbody>${rows}</tbody></table></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">Activity Feed</h2><p class="card-sub">What's happening this week</p></div></div>
+          <ul class="activity-list">${feedHtml}</ul>
+        </div>
+      </section>
+      <section class="bottom-grid">
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">Analysts</h2><p class="card-sub">Category leads &amp; risk owners</p></div></div>
+          <ul class="team-list">${teamHtml}</ul>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">Upcoming Dates</h2><p class="card-sub">Next 60 days</p></div></div>
+          <ul class="milestone-list">${msHtml}</ul>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderRuns() {
+    const statuses = ["All", "Active", "Elevated", "Under Review", "Resolved"];
+    const filtered = state.runFilter === "All" ? riskRegister : riskRegister.filter(e => e.status === state.runFilter);
+    const stats = [
+      { value: riskRegister.length, label: "Total Risks Tracked" },
+      { value: riskRegister.filter(e => e.status === "Active").length, label: "Currently Active", accent: true },
+      { value: riskRegister.filter(e => e.status === "Elevated").length, label: "Elevated" },
+      { value: riskRegister.filter(e => e.status === "Resolved").length, label: "Resolved" }
+    ];
+    const statsHtml = stats.map((s, i) => { const bar = [100, 60, 40, 20][i];
+      return `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"></div><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${bar}"></div></div></div>`; }).join("");
+
+    const filterHtml = statuses.map(s => `<button class="btn-outline run-filter-btn ${state.runFilter === s ? "btn-active" : ""}" data-filter="${s}">${s}</button>`).join("");
+
+    const rows = filtered.map(t => `<tr onclick="go404()">
+        <td><div class="t-name">${t.name}</div><div class="t-sub">${t.term}</div></td>
+        <td>${regionTag(t.dept)}</td>
+        <td class="type-col">${t.type}</td>
+        <td><span class="status-badge ${statusColors[t.status]}">${t.status}</span></td>
+        <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" data-w="${t.progress}"></div></div><span class="progress-pct">${t.progress}%</span></div></td>
+        <td class="date-col" style="font-size:12px">${t.instructor}</td>
+        <td class="date-col">${t.endDate}</td>
+        <td class="budget-col">${t.credits}</td>
+      </tr>`).join("");
+
+    return `<section class="stats-grid">${statsHtml}</section>
+      <div class="card">
+        <div class="card-header"><div><h2 class="card-title">Risk Register</h2><p class="card-sub">Full risk list across categories</p></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">${filterHtml}</div></div>
+        <div class="table-wrapper"><table class="runs-table"><thead><tr><th>Risk</th><th>Category</th><th>Type</th><th>Status</th><th>Mitigation</th><th>Owner</th><th>Next Review</th><th>Severity</th></tr></thead><tbody>${rows}</tbody></table></div>
+      </div>`;
+  }
+
+  function renderTeams() {
+    const stats = [
+      { value: riskAnalysts.length, label: "Risk Analysts", bar: 80 },
+      { value: riskAnalysts.filter(m => m.status === "active").length, label: "On Duty Today", bar: 85, accent: true },
+      { value: riskAnalysts.reduce((a, m) => a + m.courses, 0), label: "Cases Handled", bar: 70 },
+      { value: Math.round(riskAnalysts.reduce((a, m) => a + m.experience, 0) / riskAnalysts.length), label: "Avg. Yrs at Stackly", bar: 75 }
+    ];
+    const statsHtml = stats.map((s, i) => `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"></div><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${s.bar}"></div></div></div>`).join("");
+
+    const cards = riskAnalysts.map((m, i) => `<div class="team-card" onclick="go404()">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+          <div class="member-avatar" style="width:46px;height:46px;font-size:14px">${m.avatar}<span class="online-dot dot-${m.status}"></span></div>
+          <div><div class="member-name" style="font-size:15px">${m.name}</div><div class="member-role">${m.role}</div></div>
+        </div>
+        <div class="team-card-meta">
+          <div>${m.speciality}</div>
+          <div>${m.email}</div>
+          <div>${m.courses} case${m.courses !== 1 ? "s" : ""} handled · ${m.experience} yrs experience</div>
+        </div>
+      </div>`).join("");
+
+    return `<section class="stats-grid">${statsHtml}</section>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Analyst Directory</h2><p class="card-sub">Every category, every owner</p></div></div>
+      <div class="team-grid">${cards}</div></div>`;
+  }
+
+  function renderProducts() {
+    const q = state.productSearch.toLowerCase();
+    const filtered = actionItems.filter(a => a.name.toLowerCase().includes(q) || a.dept.toLowerCase().includes(q));
+    const stats = [
+      { value: "412", label: "Action Items Tracked", bar: 75, accent: true },
+      { value: "86", label: "Awaiting Review", bar: 55 },
+      { value: "54", label: "Resolved This Term", bar: 30 },
+      { value: "12", label: "Overdue", bar: 20 }
+    ];
+    const statsHtml = stats.map((s, i) => `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"></div><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${s.bar}"></div></div></div>`).join("");
+
+    const badgeBg = { "In Progress": "rgba(232,41,156,.14)", "Open": "rgba(255,255,255,.08)", "Closed": "rgba(34,197,94,.14)" };
+    const badgeColor = { "In Progress": "var(--pink)", "Open": "var(--text-dim)", "Closed": "var(--green)" };
+
+    const rows = filtered.map(a => `<tr onclick="go404()">
+        <td class="type-col mono-cell">${a.id}</td>
+        <td><div class="t-name">${a.name}</div><div class="t-sub">${a.dept}</div></td>
+        <td class="date-col">${a.category}</td>
+        <td class="date-col">${a.date}</td>
+        <td><span style="color:${urgencyColor[a.urgency]};font-weight:700;font-size:12px">${a.urgency}</span></td>
+        <td><span class="status-badge" style="background:${badgeBg[a.status]};color:${badgeColor[a.status]}">${a.status}</span></td>
+      </tr>`).join("");
+
+    return `<section class="stats-grid">${statsHtml}</section>
+      <div class="card">
+        <div class="card-header"><div><h2 class="card-title">Action Item Board</h2><p class="card-sub">Mitigation work across every category</p></div>
+        <div class="search-box" style="flex:0 0 auto"><span class="search-icon">⌕</span><input id="product-search-input" placeholder="Search action items…" value="${state.productSearch}"></div></div>
+        <div class="table-wrapper"><table class="runs-table"><thead><tr><th>ID</th><th>Action Item</th><th>Type</th><th>Assigned</th><th>Priority</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>
+      </div>`;
+  }
+
+  function renderReports() {
+    const stats = [
+      { value: riskReports.length, label: "Reports on File", bar: 80, accent: true },
+      { value: riskReports.filter(p => p.status === "Published").length, label: "Published", bar: 70 },
+      { value: riskReports.filter(p => p.status === "In Review").length, label: "In Review", bar: 20 },
+      { value: riskReports.reduce((a, p) => a + p.reads, 0), label: "Total Views", bar: 60 }
+    ];
+    const statsHtml = stats.map((s, i) => `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"></div><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${s.bar}"></div></div></div>`).join("");
+
+    const cards = riskReports.map((p, i) => `<div class="research-card" onclick="go404()">
+        <div class="research-card-row">
+          <div class="research-card-main">
+            <div class="research-card-title">${p.title}</div>
+            <div class="research-card-authors">${p.authors}</div>
+            <div class="research-card-journal">${p.journal} · ${p.year}</div>
+          </div>
+          <div class="research-card-side">
+            <span class="research-status-badge" style="background:${reportStatusColor[p.status]}1a;color:${reportStatusColor[p.status]}">${p.status}</span>
+            ${p.reads > 0 ? `<span class="research-reads">${p.reads} views</span>` : ''}
+          </div>
+        </div>
+      </div>`).join("");
+
+    return `<section class="stats-grid">${statsHtml}</section>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Risk Reports</h2><p class="card-sub">Assessments &amp; category summaries</p></div></div>
+      <div class="research-list">${cards}</div></div>`;
+  }
+
+  function renderSchedule() {
+    const rows = monitoringCalendar.map(ev => {
+      const parts = ev.date.split(" ");
+      let tag = "";
+      if (ev.type === "urgent") tag = `<span class="evt-tag" style="background:rgba(239,68,68,.14);color:#ef4444">Urgent</span>`;
+      if (ev.type === "meeting") tag = `<span class="evt-tag" style="background:rgba(45,212,191,.14);color:#2dd4bf">Meeting</span>`;
+      return `<div class="schedule-row" onclick="go404()">
+        <div class="schedule-date-col">
+          <div class="schedule-month" style="color:${scheduleTypeColor[ev.type]}">${parts[0]}</div>
+          <div class="schedule-day">${parts[1]}</div>
+        </div>
+        <div class="schedule-bar" style="background:${scheduleTypeColor[ev.type]}"></div>
+        <div class="schedule-body">
+          <div class="schedule-event">${ev.event}</div>
+          <div class="schedule-site">${ev.site}</div>
+        </div>${tag}
+      </div>`;
+    }).join("");
+    return `<div class="card"><div class="card-header"><div><h2 class="card-title">Monitoring Calendar</h2><p class="card-sub">Reviews, audits, and key dates ahead</p></div></div>
+      <div class="schedule-list">${rows}</div></div>`;
+  }
+
+  function renderBudget() {
+    const totalAllocated = budgetData.reduce((a, b) => a + b.allocated, 0);
+    const totalSpent = budgetData.reduce((a, b) => a + b.spent, 0);
+    const remaining = totalAllocated - totalSpent;
+    const utilRate = Math.round((totalSpent / totalAllocated) * 100);
+    const stats = [
+      { value: fmt(totalAllocated), label: "Total Allocated", bar: 100, accent: true },
+      { value: fmt(totalSpent), label: "Total Spent", bar: utilRate },
+      { value: fmt(remaining), label: "Remaining", bar: Math.round((remaining / totalAllocated) * 100) },
+      { value: utilRate + "%", label: "Utilisation Rate", bar: utilRate }
+    ];
+    const statsHtml = stats.map((s, i) => `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"></div><div class="stat-value" style="font-size:22px">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${s.bar}"></div></div></div>`).join("");
+
+    const rows = budgetData.map(b => {
+      const pct = Math.round((b.spent / b.allocated) * 100);
+      const barGrad = pct > 85 ? "linear-gradient(90deg,#ef4444,#f97316)" : "linear-gradient(90deg,#e8299c,#9c1568)";
+      return `<div class="budget-row" onclick="go404()">
+        <div class="budget-row-top">
+          <div><span class="budget-row-name">${b.site}</span>
+          <span class="region-tag budget-row-tag" style="color:${riskCategoryAccents[b.dept]};border-color:${riskCategoryAccents[b.dept]};background:${riskCategoryAccents[b.dept]}1a;">${b.dept}</span></div>
+          <div class="budget-row-figures"><span class="budget-spent">${fmt(b.spent)}</span> / ${fmt(b.allocated)}
+          <span class="budget-pct" style="color:${pct > 80 ? "#ef4444" : "var(--pink)"};">${pct}%</span></div>
+        </div>
+        <div class="budget-bar-track">
+          <div class="progress-fill" data-w="${pct}" style="background:${barGrad};height:100%;"></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<section class="stats-grid">${statsHtml}</section>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Budget &amp; Spend by Category</h2><p class="card-sub">Allocation vs spend this term</p></div></div>
+      <div class="budget-list">${rows}</div></div>`;
+  }
+
+  function renderTraining() {
+    const stats = [
+      { value: resourceLibrary.length, label: "Titles Available", bar: 80, accent: true },
+      { value: resourceLibrary.reduce((a, p) => a + p.downloads, 0).toLocaleString(), label: "Total Downloads", bar: 90 },
+      { value: resourceLibrary.reduce((a, p) => a + p.pages, 0).toLocaleString(), label: "Total Pages", bar: 65 },
+      { value: "2025", label: "Latest Edition", bar: 100 }
+    ];
+    const statsHtml = stats.map((s, i) => `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"></div><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${s.bar}"></div></div></div>`).join("");
+
+    const cards = resourceLibrary.map((pub, i) => `<div class="pub-card" onclick="go404()">
+        <div class="pub-card-title">${pub.title}</div>
+        <div class="pub-card-meta">${pub.type} · ${pub.year} · ${pub.pages} pages</div>
+        <div class="pub-card-footer">
+          <span class="pub-downloads">${pub.downloads.toLocaleString()} downloads</span>
+          <button class="btn-outline pub-view-btn" onclick="event.stopPropagation();go404()">View</button>
+        </div>
+      </div>`).join("");
+
+    return `<section class="stats-grid">${statsHtml}</section>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Resource Library</h2><p class="card-sub">Playbooks, guides, and reference material</p></div></div>
+      <div class="pub-grid">${cards}</div></div>`;
+  }
+
+  function toggleHtml(id, value) {
+    return `<div class="toggle-switch" data-toggle="${id}" style="background:${value ? "var(--pink)" : "var(--border)"}">
+      <div class="toggle-knob" style="left:${value ? "20px" : "3px"}"></div></div>`;
+  }
+
+  function renderSettings() {
+    const s = state.settings;
+    const displayName = currentUsername || currentEmail || "Signed out";
+    const displayEmail = currentEmail || "No account signed in";
+    return `
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Account</h2><p class="card-sub">Signed-in profile</p></div></div>
+        <div class="account-row">
+          <div class="account-avatar">${currentInitial}</div>
+          <div><div class="account-name">${displayName}</div>
+          <div class="account-email">${displayEmail}</div>
+          <div class="account-role">${currentUser ? (currentUser.role === 'admin' ? 'Administrator account' : 'User account') : 'Not signed in'}</div></div>
+        </div>
+        <button class="btn-outline" onclick="go404()">Edit Profile</button>
+      </div>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Preferences</h2><p class="card-sub">Notifications and display</p></div></div>
+        <div>
+          <div class="pref-row">
+            <div><div class="pref-title">Push Notifications</div><div class="pref-desc">Alerts for new risk signals and status changes</div></div>
+            ${toggleHtml("notifications", s.notifications)}
+          </div>
+          <div class="pref-row">
+            <div><div class="pref-title">Weekly Digest</div><div class="pref-desc">Summary of category activity every Monday</div></div>
+            ${toggleHtml("emailDigest", s.emailDigest)}
+          </div>
+          <div class="pref-row">
+            <div><div class="pref-title">Dark Mode</div><div class="pref-desc">Use a darker colour scheme across the console</div></div>
+            ${toggleHtml("darkMode", s.darkMode)}
+          </div>
+          <div class="pref-row pref-row-last">
+            <div><div class="pref-title">Language</div><div class="pref-desc">Interface display language</div></div>
+            <select class="pref-select" id="lang-select">${["English", "French", "Spanish", "Mandarin", "Portuguese"].map(l => `<option ${s.language === l ? "selected" : ""}>${l}</option>`).join("")}</select>
+          </div>
+        </div>
+      </div>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Session</h2><p class="card-sub">Sign out of this account on this device</p></div></div>
+        <div class="session-row">
+          <div class="session-text">Signed in as <strong>${displayEmail}</strong>. Signing out will clear this session and return you to the sign-in screen.</div>
+          <button class="btn-outline btn-danger" id="settings-logout-btn">Sign out</button>
+        </div>
+      </div>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Danger Zone</h2><p class="card-sub">Irreversible account actions</p></div></div>
+        <div class="danger-row">
+          <button class="btn-outline btn-danger" onclick="go404()">Reset Password</button>
+          <button class="btn-outline btn-danger" onclick="go404()">Delete Account</button>
+        </div>
+      </div>`;
+  }
+
+  const pageRenderers = { dashboard: renderDashboard, runs: renderRuns, teams: renderTeams, products: renderProducts, reports: renderReports, schedule: renderSchedule, budget: renderBudget, training: renderTraining, settings: renderSettings };
+
+  function renderNav() {
+    const mainItems = navItems.slice(0, 6);
+    const mgmtItems = navItems.slice(6);
+    function itemHtml(item) {
+      const badge = item.id === "runs" ? `<span class="nav-badge">8</span>` : "";
+      return `<button class="nav-item ${state.activeNav === item.id ? "nav-active" : ""}" data-nav="${item.id}"><span>${item.label}</span>${badge}</button>`;
+    }
+    document.getElementById("nav-main").innerHTML = mainItems.map(itemHtml).join("");
+    document.getElementById("nav-management").innerHTML = mgmtItems.map(itemHtml).join("");
+  }
+
+  function renderPage() {
+    const page = pageMap[state.activeNav];
+    document.getElementById("page-title-text").textContent = page.title;
+    document.getElementById("page-sub-text").textContent = page.sub;
+    document.getElementById("content-area").innerHTML = pageRenderers[state.activeNav]();
+    renderNav();
+    const settingsLogoutBtn = document.getElementById("settings-logout-btn");
+    if (settingsLogoutBtn) settingsLogoutBtn.addEventListener("click", logout);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    animateStatBars();
+    gsapEntrance();
+  }
+
+  function navigateTo(id) {
+    state.activeNav = id;
+    try { localStorage.setItem('activeNav', id); } catch (e) {}
+    closeSidebar();
+    closeTopbarUserMenu();
+    renderPage();
+  }
+
+  function openSidebar() { document.getElementById("sidebar").classList.add("sidebar-open"); document.getElementById("sidebar-overlay").classList.add("show"); }
+  function closeSidebar() { document.getElementById("sidebar").classList.remove("sidebar-open"); document.getElementById("sidebar-overlay").classList.remove("show"); }
+  function closeTopbarUserMenu() { document.getElementById("topbar-user").classList.remove("open"); }
+
+  document.getElementById("hamburger-btn").addEventListener("click", openSidebar);
+  document.getElementById("close-sidebar-btn").addEventListener("click", closeSidebar);
+  document.getElementById("brand-home-btn").addEventListener("click", function() { navigateTo("dashboard"); });
+  document.getElementById("sidebar-overlay").addEventListener("click", closeSidebar);
+  document.getElementById("notif-btn").addEventListener("click", go404);
+  document.getElementById("logout-btn").addEventListener("click", logout);
+  document.getElementById("topbar-logout-btn").addEventListener("click", logout);
+  document.getElementById("topbar-user-btn").addEventListener("click", function(e) { e.stopPropagation(); document.getElementById("topbar-user").classList.toggle("open"); });
+  document.addEventListener("click", closeTopbarUserMenu);
+
+  document.addEventListener("click", function(e) {
+    const navBtn = e.target.closest("[data-nav]");
+    if (navBtn) { navigateTo(navBtn.getAttribute("data-nav")); return; }
+    const filterBtn = e.target.closest(".run-filter-btn");
+    if (filterBtn) { state.runFilter = filterBtn.getAttribute("data-filter"); renderPage(); return; }
+    const toggle = e.target.closest("[data-toggle]");
+    if (toggle) {
+      const key = toggle.getAttribute("data-toggle");
+      state.settings[key] = !state.settings[key];
+      saveSettings();
+      const value = state.settings[key];
+      toggle.style.background = value ? "var(--pink)" : "var(--border)";
+      const knob = toggle.querySelector(".toggle-knob");
+      if (knob) knob.style.left = value ? "20px" : "3px";
+      return;
+    }
+  });
+
+  document.addEventListener("input", function(e) {
+    if (e.target && e.target.id === "product-search-input") {
+      state.productSearch = e.target.value;
+      const caretPos = e.target.selectionStart;
+      renderPage();
+      const input = document.getElementById("product-search-input");
+      if (input) { input.focus(); input.setSelectionRange(caretPos, caretPos); }
+    }
+  });
+
+  document.addEventListener("change", function(e) {
+    if (e.target && e.target.id === "lang-select") { state.settings.language = e.target.value; saveSettings(); }
+  });
+
+  paintUserChrome();
+  if (typeof gsap !== 'undefined') {
+    gsap.from('#topbar', { y: -14, opacity: 0, duration: 0.5, ease: 'power2.out' });
+  }
+  renderPage();
+</script>
+</body>
+</html>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly — Services</title>
+<script>
+  // Runs before the browser has a chance to restore a previous
+  // scroll position or jump to a leftover #hash on refresh.
+  if('scrollRestoration' in history){ history.scrollRestoration = 'manual'; }
+  if(window.location.hash){
+    try{ history.replaceState(null, '', window.location.pathname + window.location.search); }catch(e){}
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<link rel="stylesheet" href="../css/services.css">
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <nav class="nav">
+    <a href="index.html#hero" class="logo" data-nav-home>
+      <img class="logo-placeholder" src="../assets/Logo.webp" alt="Your logo">
+      <span class="logo-text-wrap">
+        
+      </span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html#hero">Home</a>
+      <a href="services.html" class="active">Services</a>
+      <a href="about.html">About</a>
+      <a href="blog.html">Blog</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="nav-right">
+        <a href="login.html" class="nav-login">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-6 7.5-6s6 2 7.5 6"/></svg>
+            Login
+          </a>
+      <a href="signup.html" class="btn-gold nav-signup">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c1.2-3.4 4.2-5 6.5-5s5.3 1.6 6.5 5"/><path d="M19 8v6M22 11h-6"/></svg>
+        Sign Up
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- ============ MOBILE FULL-SCREEN MENU ============ -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-top">
+    <a href="index.html#hero" class="logo">
+      <img class="logo-placeholder" src="../assets/Logo.webp" alt="Your logo">
+      <span class="logo-text-wrap">
+        
+      </span>
+    </a>
+    <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="mobile-menu-links">
+    <a href="index.html#hero">Home</a>
+    <a href="services.html" class="active">Services</a>
+    <a href="about.html">About</a>
+    <a href="blog.html">Blog</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html" class="nav-login" style="text-align:left;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-6 7.5-6s6 2 7.5 6"/></svg>
+        Login
+      </a>
+    <a href="signup.html" class="btn-gold">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c1.2-3.4 4.2-5 6.5-5s5.3 1.6 6.5 5"/><path d="M19 8v6M22 11h-6"/></svg>
+      Sign Up
+    </a>
+  </div>
+</div>
+
+<!-- ============ 6. SERVICES ============ -->
+<section class="services-section" id="services">
+  <div class="wrap services-hero">
+    <h2>Five ways to stay in control,<br>built around how risk actually<br>moves through a business.</h2>
+    <p class="section-sub">Each service runs independently or as part of the full Stackly system — choose the coverage your organization needs today and add categories as exposure grows.</p>
+    <div class="services-stats">
+      <div class="services-stat"><span class="services-stat-label">Deployment</span><span class="services-stat-value">2–6 weeks</span></div>
+      <div class="services-stat"><span class="services-stat-label">Coverage</span><span class="services-stat-value">5 categories</span></div>
+      <div class="services-stat"><span class="services-stat-label">Monitoring</span><span class="services-stat-value">Continuous</span></div>
+      <div class="services-stat"><span class="services-stat-label">Integrations</span><span class="services-stat-value">40+ systems</span></div>
+    </div>
+  </div>
+
+  <div class="wrap services-list">
+
+    <div class="service-row" id="service-enterprise">
+      <div class="service-text">
+        <div class="service-row-top"><span class="service-num">01</span><span class="service-badge">Built for cross-functional teams</span></div>
+        <h3>Enterprise Risk</h3>
+        <p>A single register for organization-wide exposure — every function, region, and vendor relationship scored and ranked in one place, so leadership stops discovering risk after the fact.</p>
+        <div class="service-stats">
+          <div><b>140+</b><span>Risk factors tracked</span></div>
+          <div><b>12</b><span>Business units covered</span></div>
+        </div>
+        <a href="404.html" class="service-link">Talk to a specialist
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="service-media">
+        <img src="https://images.unsplash.com/photo-1543132220-3ec99c6094dc?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Enterprise risk">
+        <span class="service-media-tag">Enterprise Risk</span>
+      </div>
+    </div>
+
+    <div class="service-row reverse" id="service-operational">
+      <div class="service-media">
+        <img src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Operational risk">
+        <span class="service-media-tag">Operational Risk</span>
+      </div>
+      <div class="service-text">
+        <div class="service-row-top"><span class="service-num">02</span><span class="service-badge">Built for operations leads</span></div>
+        <h3>Operational Risk</h3>
+        <p>Process failures rarely announce themselves. Stackly flags the process gaps, staffing strain, and supplier friction most likely to interrupt operations, before they do.</p>
+        <div class="service-stats">
+          <div><b>31%</b><span>Fewer disruptions</span></div>
+          <div><b>Real-time</b><span>Process alerts</span></div>
+        </div>
+        <a href="404.html" class="service-link">Talk to a specialist
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="service-row" id="service-financial">
+      <div class="service-text">
+        <div class="service-row-top"><span class="service-num">03</span><span class="service-badge">Built for finance teams</span></div>
+        <h3>Financial Risk</h3>
+        <p>Track exposure to market volatility, credit concentration, and liquidity pressure alongside the operational data that usually explains it, in the same dashboard your CFO already reads.</p>
+        <div class="service-stats">
+          <div><b>18</b><span>Market indicators</span></div>
+          <div><b>Daily</b><span>Exposure recalculation</span></div>
+        </div>
+        <a href="404.html" class="service-link">Talk to a specialist
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="service-media">
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Financial risk">
+        <span class="service-media-tag">Financial Risk</span>
+      </div>
+    </div>
+
+    <div class="service-row reverse" id="service-compliance">
+      <div class="service-media">
+        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Compliance risk">
+        <span class="service-media-tag">Compliance Risk</span>
+      </div>
+      <div class="service-text">
+        <div class="service-row-top"><span class="service-num">04</span><span class="service-badge">Built for legal &amp; compliance</span></div>
+        <h3>Compliance Risk</h3>
+        <p>Regulatory change is tracked against your actual policies and controls, with gaps surfaced before an audit finds them, across every jurisdiction you operate in.</p>
+        <div class="service-stats">
+          <div><b>65</b><span>Jurisdictions monitored</span></div>
+          <div><b>Automated</b><span>Control mapping</span></div>
+        </div>
+        <a href="mailto:hello@stackly.com" class="service-link">Talk to a specialist
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="service-row" id="service-cyber">
+      <div class="service-text">
+        <div class="service-row-top"><span class="service-num">05</span><span class="service-badge">Built for security teams</span></div>
+        <h3>Cyber Risk</h3>
+        <p>Attack surface, vendor access, and control drift are watched continuously, so exposure gets caught while it's still cheap to fix — not after a breach report.</p>
+        <div class="service-stats">
+          <div><b>24/7</b><span>Continuous scanning</span></div>
+          <div><b>&lt;15 min</b><span>Alert response</span></div>
+        </div>
+        <a href="404.html" class="service-link">Talk to a specialist
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="service-media">
+        <img src="https://images.unsplash.com/photo-1614064642261-3ccbfafa481b?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Cyber risk">
+        <span class="service-media-tag">Cyber Risk</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="wrap services-pricing">
+    <div class="pricing-head">
+      <h2>Coverage scales with<br>what you need monitored.</h2>
+      <p>Every tier includes the full risk matrix and monitoring engine — the difference is depth and automation.</p>
+    </div>
+    <div class="pricing-table-wrap">
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th>Essential</th>
+            <th class="highlight">Advanced</th>
+            <th>Enterprise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Live risk matrix</td>
+            <td class="dash">Included</td>
+            <td class="dash highlight">Included</td>
+            <td class="dash">Included</td>
+          </tr>
+          <tr>
+            <td>Categories covered</td>
+            <td>2 of 5</td>
+            <td class="dash highlight">5 of 5</td>
+            <td class="dash">5 of 5 + custom</td>
+          </tr>
+          <tr>
+            <td>System integrations</td>
+            <td>Up to 5</td>
+            <td class="dash highlight">Up to 25</td>
+            <td class="dash">Unlimited</td>
+          </tr>
+          <tr>
+            <td>Response SLA</td>
+            <td>Next business day</td>
+            <td class="dash highlight">4 hours</td>
+            <td class="dash">30 minutes</td>
+          </tr>
+          <tr>
+            <td>Dedicated risk analyst</td>
+            <td class="mute">—</td>
+            <td class="mute">—</td>
+            <td class="dash">Included</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="wrap services-ask">
+    <h3>Not sure which coverage<br>fits your risk profile?</h3>
+    <div class="services-ask-actions">
+      <a href="404.html" class="btn btn-pill btn-primary">Talk to an Expert
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <button type="button" class="btn btn-pill btn-outline" data-open-login>Create Free Account</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12. FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html#hero" class="logo">
+          <img class="logo-placeholder logo-placeholder-footer" src="../assets/Logo.webp" alt="Your logo">
+        </a>
+        <p>Enterprise risk systems for organizations that refuse to be caught off guard.</p>
+        <div class="footer-social">
+          <a href="404.html" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          </a>
+          <a href="404.html" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 21v-7h2.5l.5-3H14V9.2c0-.9.3-1.7 1.7-1.7H17V5c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.2V11H8v3h2.6v7"/></svg>
+          </a>
+          <a href="404.html" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="9" width="4" height="10"/><circle cx="5" cy="5" r="1.6"/><path d="M11 19v-6.5a2.5 2.5 0 0 1 5 0V19M11 12.5V19"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <a href="index.html#hero">Home</a>
+        <a href="services.html">Services</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="404.html">Risk Library</a>
+        <a href="404.html">Insight Reports</a>
+        <a href="404.html">Assessment Guide</a>
+        <a href="404.html">Client Portal</a>
+        <a href="404.html">Trust Center</a>
+      </div>
+      <div class="footer-col">
+        <h4>Get In Touch</h4>
+        <ul class="footer-contact">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+            <a href="404.html" target="_blank" rel="noopener">MMR Complex, Periyakollappatty,<br>Chinna Thirupathi, Salem, Tamil<br>Nadu 636008</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5c0 8.8 6.2 15 15 15l2-3.5-5-2-1.5 2C11.5 15 9 12.5 8.5 9.5l2-1.5-2-5z"/></svg>
+            <a href="404.html">0712 371 2345</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+            <a href="404.html">hello@stackly.com</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 STACKLY</span>
+      <span class="status-dot">ALL SYSTEMS MONITORED</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ LOGIN MODAL (new) ============ -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <button type="button" class="modal-close" id="loginModalClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <h3>Welcome back</h3>
+    <p class="modal-sub">Sign in to your Stackly workspace.</p>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="li-email">Email</label>
+        <input id="li-email" type="email" required placeholder="you@company.com">
+      </div>
+      <div class="form-group">
+        <label for="li-pass">Password</label>
+        <input id="li-pass" type="password" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary">Sign In</button>
+    </form>
+    <div class="modal-note" id="loginNote">
+      <p>This is a demo environment, so live sign-in isn't wired up yet — but the team behind it is real. Tell us what you need instead.</p>
+      <a href="mailto:hello@stackly.com" class="btn btn-outline" id="loginNoteCta" style="width:100%; justify-content:center;">Get In Touch</a>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+  gsap.registerPlugin(ScrollTrigger);
+
+
+  /* =========================================================
+     ALWAYS OPEN AT THE TOP ON REFRESH.
+     scrollRestoration is already set to 'manual' and any stale
+     #hash already cleared by the inline script in <head> (before
+     the browser gets a chance to restore scroll position). This
+     is the belt-and-braces follow-up once the DOM/assets are in.
+     ========================================================= */
+  (function(){
+    window.scrollTo(0, 0);
+    window.addEventListener('load', function(){
+      window.scrollTo(0, 0);
+      if(window.ScrollTrigger) ScrollTrigger.refresh();
+    });
+  })();
+
+  /* =========================================================
+     HAMBURGER / FULL-SCREEN MOBILE MENU
+     ========================================================= */
+  (function(){
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeBtn = document.getElementById('mobileMenuClose');
+
+    function openMenu(){
+      mobileMenu.style.display = 'flex';
+      void mobileMenu.offsetWidth;
+      mobileMenu.classList.add('open');
+      hamburger.classList.add('active');
+      document.body.classList.add('menu-open');
+      hamburger.setAttribute('aria-expanded', 'true');
+    }
+    function closeMenu(){
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('active');
+      document.body.classList.remove('menu-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      setTimeout(function(){
+        if(!mobileMenu.classList.contains('open')){
+          mobileMenu.style.display = 'none';
+        }
+      }, 350);
+    }
+
+    hamburger.addEventListener('click', function(){
+      const isOpen = mobileMenu.classList.contains('open');
+      isOpen ? closeMenu() : openMenu();
+    });
+    closeBtn.addEventListener('click', closeMenu);
+    document.querySelectorAll('.mobile-menu a').forEach(function(link){
+      link.addEventListener('click', closeMenu);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && mobileMenu.classList.contains('open')) closeMenu();
+    });
+    window.addEventListener('resize', function(){
+      if(window.innerWidth > 720 && mobileMenu.classList.contains('open')) closeMenu();
+    });
+  })();
+
+  /* =========================================================
+     LOGIN MODAL
+     ========================================================= */
+  (function(){
+    const overlay = document.getElementById('loginModal');
+    const closeBtn = document.getElementById('loginModalClose');
+    const form = document.getElementById('loginForm');
+    const note = document.getElementById('loginNote');
+
+    function openModal(){
+      overlay.classList.add('open');
+      document.body.classList.add('modal-open');
+      form.classList.remove('hide');
+      note.classList.remove('show');
+      form.reset();
+    }
+    function closeModal(){
+      overlay.classList.remove('open');
+      document.body.classList.remove('modal-open');
+    }
+    document.querySelectorAll('[data-open-login]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        openModal();
+        const mobileMenu = document.getElementById('mobileMenu');
+        if(mobileMenu.classList.contains('open')){
+          mobileMenu.classList.remove('open');
+          document.getElementById('hamburger').classList.remove('active');
+          document.body.classList.remove('menu-open');
+          setTimeout(function(){ mobileMenu.style.display = 'none'; }, 350);
+        }
+      });
+    });
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', function(e){ if(e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay.classList.contains('open')) closeModal(); });
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      form.classList.add('hide');
+      note.classList.add('show');
+    });
+    document.getElementById('loginNoteCta').addEventListener('click', closeModal);
+  })();
+
+  /* =========================================================
+     SCROLL PROGRESS BAR
+     ========================================================= */
+  (function(){
+    const bar = document.getElementById('scrollProgress');
+    gsap.to(bar, { width: '100%', ease: 'none', scrollTrigger: { scrub: 0.3 } });
+  })();
+
+  /* =========================================================
+     HEADER: subtle shrink + shadow after scrolling
+     ========================================================= */
+  (function(){
+    const header = document.querySelector('header');
+    ScrollTrigger.create({ start: 'top -80', end: 99999, toggleClass: { targets: header, className: 'is-scrolled' } });
+  })();
+
+  /* =========================================================
+     ACTIVE NAV LINK — click-based, not scroll-based.
+     Whichever nav item you click (Home/Services/About/Blog/
+     Contact) stays highlighted while you scroll the page. It only
+     changes when you click a different nav item — scrolling by
+     itself never moves the highlight.
+     ========================================================= */
+  (function(){
+    const navLinkEls = document.querySelectorAll('#navLinks a, .mobile-menu-links a');
+    if(!navLinkEls.length) return;
+    navLinkEls.forEach(function(link){
+      link.addEventListener('click', function(){
+        navLinkEls.forEach(function(a){ a.classList.remove('active'); });
+        // Mark this link (and its counterpart in the other nav —
+        // desktop vs. mobile menu — which share the same href).
+        const href = link.getAttribute('href');
+        navLinkEls.forEach(function(a){
+          if(a.getAttribute('href') === href) a.classList.add('active');
+        });
+      });
+    });
+  })();
+
+  /* =========================================================
+     SMOOTH ANCHOR SCROLL (offset for sticky header)
+     ========================================================= */
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      const id = a.getAttribute('href');
+      if(id.length > 1 && document.querySelector(id)){
+        e.preventDefault();
+        const target = document.querySelector(id);
+        const headerH = document.querySelector('header').offsetHeight;
+        const destY = target.getBoundingClientRect().top + window.scrollY - headerH;
+        const scrollObj = { y: window.scrollY };
+        gsap.to(scrollObj, {
+          y: destY, duration: 0.9, ease: 'power2.inOut',
+          onUpdate: function(){ window.scrollTo(0, scrollObj.y); }
+        });
+      }
+    });
+  });
+
+  /* =========================================================
+     SERVICES PAGE — heading / stat / pricing-head reveals
+     ========================================================= */
+  (function(){
+    const revealGroups = [
+      '.services-hero h2', '.services-hero .section-sub', '.services-stats',
+      '.pricing-head h2', '.pricing-head p', '.services-ask h3'
+    ];
+    revealGroups.forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){
+        gsap.fromTo(el, { opacity: 0, y: 28 }, {
+          opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+        });
+      });
+    });
+  })();
+
+  /* =========================================================
+     SERVICES — alternating slide-in rows + pricing table stagger
+     ========================================================= */
+  (function(){
+    document.querySelectorAll('.service-row').forEach(function(row){
+      const fromRight = row.classList.contains('reverse');
+      const text = row.querySelector('.service-text');
+      const media = row.querySelector('.service-media');
+      const tl = gsap.timeline({ scrollTrigger: { trigger: row, start: 'top 78%', once: true } });
+      tl.fromTo(text, { opacity: 0, x: fromRight ? 40 : -40 }, { opacity: 1, x: 0, duration: .8, ease: 'power3.out' }, 0)
+        .fromTo(media, { opacity: 0, x: fromRight ? -40 : 40, scale: .96 }, { opacity: 1, x: 0, scale: 1, duration: .8, ease: 'power3.out' }, 0.08);
+    });
+
+    const priceRows = gsap.utils.toArray('.pricing-table tbody tr');
+    if(priceRows.length){
+      gsap.fromTo(priceRows, { opacity: 0, y: 14 }, {
+        opacity: 1, y: 0, duration: .5, stagger: .08, ease: 'power2.out',
+        scrollTrigger: { trigger: '.pricing-table', start: 'top 85%', once: true }
+      });
+    }
+  })();
+
+</script>
+</body>
+</html>

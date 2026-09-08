@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly — The Intelligence Journal</title>
+<script>
+  if('scrollRestoration' in history){ history.scrollRestoration = 'manual'; }
+  if(window.location.hash){
+    try{ history.replaceState(null, '', window.location.pathname + window.location.search); }catch(e){}
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<link rel="stylesheet" href="../css/blog.css">
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <nav class="nav">
+    <a href="index.html#hero" class="logo" data-nav-home>
+      <img class="logo-placeholder" src="../assets/Logo.webp" alt="Your logo">
+      <span class="logo-text-wrap">
+       
+      </span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html#hero">Home</a>
+      <a href="services.html">Services</a>
+      <a href="about.html">About</a>
+      <a href="blog.html" class="active">Blog</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="nav-right">
+        <a href="login.html" class="nav-login">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-6 7.5-6s6 2 7.5 6"/></svg>
+            Login
+          </a>
+      <a href="signup.html" class="btn-gold nav-signup">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c1.2-3.4 4.2-5 6.5-5s5.3 1.6 6.5 5"/><path d="M19 8v6M22 11h-6"/></svg>
+        Sign Up
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- ============ MOBILE FULL-SCREEN MENU ============ -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-top">
+    <a href="index.html#hero" class="logo">
+      <img class="logo-placeholder" src="../assets/Logo.webp" alt="Your logo">
+      <span class="logo-text-wrap">
+        
+      </span>
+    </a>
+    <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="mobile-menu-links">
+    <a href="index.html#hero">Home</a>
+    <a href="services.html">Services</a>
+    <a href="about.html">About</a>
+    <a href="blog.html" class="active">Blog</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html" class="nav-login" style="text-align:left;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-6 7.5-6s6 2 7.5 6"/></svg>
+        Login
+      </a>
+    <a href="signup.html" class="btn-gold">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c1.2-3.4 4.2-5 6.5-5s5.3 1.6 6.5 5"/><path d="M19 8v6M22 11h-6"/></svg>
+      Sign Up
+    </a>
+  </div>
+</div>
+
+<!-- ============ 1. JOURNAL HERO + FEATURED ============ -->
+<section class="journal-hero">
+  <div class="wrap">
+    <span class="eyebrow">Research</span>
+    <h1 id="journalTitle">The Intelligence Journal.</h1>
+  </div>
+  <div class="wrap featured-grid">
+    <div class="featured-main">
+      <span class="blog-tag">Featured Intelligence</span>
+      <h2>Why most risk models miss the signal that mattered</h2>
+      <p>An analysis of forty incident post-mortems shows the warning was almost always present in the data weeks in advance — the failure was in the model that was supposed to be watching.</p>
+      <div class="featured-meta">September 2026 &middot; 11 min read &middot; Aiko Yamada</div>
+    </div>
+    <div class="featured-stats">
+      <div class="featured-stat">
+        <span class="featured-stat-label">Signals Reviewed</span>
+        <span class="featured-stat-value" id="statSignals">0</span>
+      </div>
+      <div class="featured-stat">
+        <span class="featured-stat-label">Median Lead Time Missed</span>
+        <span class="featured-stat-value" id="statLeadTime">0d</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. EDITOR'S PICKS ============ -->
+<section class="picks-section">
+  <div class="wrap">
+    <span class="eyebrow">Editor's Picks</span>
+    <div class="picks-grid">
+      <div class="pick-card">
+        <div class="pick-card-inner">
+          <div class="pick-card-face pick-card-front">
+            <span class="blog-tag">Deep Analysis</span>
+            <h3>The False Comfort of Quarterly Risk Reviews</h3>
+            <p>Why a risk posture that's only reassessed four times a year is already out of date by the second week.</p>
+            <div class="pick-meta">Aug 2026 &middot; 9 min</div>
+          </div>
+          <div class="pick-card-face pick-card-back">
+            <span class="blog-tag">Deep Analysis</span>
+            <h3>Read the full breakdown</h3>
+            <p>We walk through three real portfolios where a quarterly cadence let exposure drift for weeks before anyone noticed.</p>
+            <span class="pick-cta">Read now →</span>
+          </div>
+        </div>
+      </div>
+      <div class="pick-card">
+        <div class="pick-card-inner">
+          <div class="pick-card-face pick-card-front">
+            <span class="blog-tag">Case Study</span>
+            <h3>How a Mid-Size Lender Cut Exposure 41%</h3>
+            <p>A walkthrough of the signal sources and mitigation sequence behind one of our largest year-over-year gains.</p>
+            <div class="pick-meta">Aug 2026 &middot; 7 min</div>
+          </div>
+          <div class="pick-card-face pick-card-back">
+            <span class="blog-tag">Case Study</span>
+            <h3>See the full sequence</h3>
+            <p>From first signal to closed gap in eleven weeks — the exact playbook their risk team followed.</p>
+            <span class="pick-cta">Read now →</span>
+          </div>
+        </div>
+      </div>
+      <div class="pick-card">
+        <div class="pick-card-inner">
+          <div class="pick-card-face pick-card-front">
+            <span class="blog-tag">Research Note</span>
+            <h3>Reading Confidence Scores Under Pressure</h3>
+            <p>A short guide for teams tempted to override a high-confidence signal during a live incident.</p>
+            <div class="pick-meta">Jul 2026 &middot; 6 min</div>
+          </div>
+          <div class="pick-card-face pick-card-back">
+            <span class="blog-tag">Research Note</span>
+            <h3>The three-question check</h3>
+            <p>A fast gut-check for on-call analysts before they override what the model is telling them.</p>
+            <span class="pick-cta">Read now →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. RISK SIGNALS ============ -->
+<section class="signals-section">
+  <div class="wrap">
+    <span class="eyebrow">Risk Signals</span>
+    <h2>Short, emerging.</h2>
+    <div class="signal-filters" id="signalFilters">
+      <button type="button" class="filter-pill active" data-filter="all">All</button>
+      <button type="button" class="filter-pill" data-filter="supply-chain">Supply Chain</button>
+      <button type="button" class="filter-pill" data-filter="cyber">Cyber</button>
+      <button type="button" class="filter-pill" data-filter="compliance">Compliance</button>
+      <button type="button" class="filter-pill" data-filter="financial">Financial</button>
+      <button type="button" class="filter-pill" data-filter="operations">Operations</button>
+      <button type="button" class="filter-pill" data-filter="reputation">Reputation</button>
+    </div>
+    <div class="signal-list" id="signalList">
+      <div class="signal-row" data-category="supply-chain">
+        <span class="signal-date">Aug 29</span>
+        <span class="signal-text">Container rates on the Pacific corridor show early volatility not yet reflected in contracts.</span>
+        <span class="signal-cat">Supply Chain</span>
+      </div>
+      <div class="signal-row" data-category="cyber">
+        <span class="signal-date">Aug 26</span>
+        <span class="signal-text">A rise in credential-stuffing attempts across mid-market SaaS platforms.</span>
+        <span class="signal-cat">Cyber</span>
+      </div>
+      <div class="signal-row" data-category="compliance">
+        <span class="signal-date">Aug 21</span>
+        <span class="signal-text">Three jurisdictions have quietly narrowed data-residency exemptions this month.</span>
+        <span class="signal-cat">Compliance</span>
+      </div>
+      <div class="signal-row" data-category="financial">
+        <span class="signal-date">Aug 18</span>
+        <span class="signal-text">Regional payment processors reporting settlement delays above seasonal norms.</span>
+        <span class="signal-cat">Financial</span>
+      </div>
+      <div class="signal-row" data-category="operations">
+        <span class="signal-date">Aug 12</span>
+        <span class="signal-text">Warehouse automation vendors seeing longer parts lead times industry-wide.</span>
+        <span class="signal-cat">Operations</span>
+      </div>
+      <div class="signal-row" data-category="reputation">
+        <span class="signal-date">Aug 09</span>
+        <span class="signal-text">Sentiment tracking shows a slow build of customer complaints ahead of a product recall.</span>
+        <span class="signal-cat">Reputation</span>
+      </div>
+      <div class="signal-row" data-category="cyber">
+        <span class="signal-date">Aug 05</span>
+        <span class="signal-text">A known ransomware group has shifted targeting toward mid-market healthcare providers.</span>
+        <span class="signal-cat">Cyber</span>
+      </div>
+      <div class="signal-row" data-category="supply-chain">
+        <span class="signal-date">Jul 30</span>
+        <span class="signal-text">Port congestion easing in Southeast Asia, but backhaul rates remain elevated.</span>
+        <span class="signal-cat">Supply Chain</span>
+      </div>
+      <div class="signal-row" data-category="financial">
+        <span class="signal-date">Jul 24</span>
+        <span class="signal-text">Short-term credit spreads widening for mid-cap industrials ahead of earnings season.</span>
+        <span class="signal-cat">Financial</span>
+      </div>
+      <div class="signal-row" data-category="compliance">
+        <span class="signal-date">Jul 19</span>
+        <span class="signal-text">A new cross-border data transfer rule is drawing early enforcement attention in the EU.</span>
+        <span class="signal-cat">Compliance</span>
+      </div>
+    </div>
+    <p class="signal-empty" id="signalEmpty">No signals in this category right now.</p>
+  </div>
+</section>
+
+<!-- ============ 4. LONG-FORM REPORTS ============ -->
+<section class="reports-section">
+  <div class="wrap">
+    <span class="eyebrow">Deep Analysis</span>
+    <h2>Long-form reports.</h2>
+    <div class="report-list" id="reportList">
+      <a class="report-row" href="404.html">
+        <span class="report-num">01</span>
+        <div class="report-text">
+          <h3>The Lag Between Signal and Response</h3>
+          <p>Why the gap between detection and action is the real driver of loss, not detection itself.</p>
+        </div>
+        <span class="report-time">18 min</span>
+      </a>
+      <a class="report-row" href="404.html">
+        <span class="report-num">02</span>
+        <div class="report-text">
+          <h3>Cascading Risk in Modern Supply Networks</h3>
+          <p>Mapping how single-source dependencies turned three-day delays into three-month ones.</p>
+        </div>
+        <span class="report-time">24 min</span>
+      </a>
+      <a class="report-row" href="404.html">
+        <span class="report-num">03</span>
+        <div class="report-text">
+          <h3>What Confidence Scores Actually Mean</h3>
+          <p>A field guide to reading probabilistic risk output without over- or under-trusting it.</p>
+        </div>
+        <span class="report-time">14 min</span>
+      </a>
+      <a class="report-row" href="404.html">
+        <span class="report-num">04</span>
+        <div class="report-text">
+          <h3>Building a Single Source of Truth for Exposure</h3>
+          <p>How enterprise risk teams are replacing quarterly spreadsheets with a live index.</p>
+        </div>
+        <span class="report-time">20 min</span>
+      </a>
+      <a class="report-row" href="404.html">
+        <span class="report-num">05</span>
+        <div class="report-text">
+          <h3>The Economics of Earlier Detection</h3>
+          <p>A cost model for what one extra week of lead time is actually worth, by industry.</p>
+        </div>
+        <span class="report-time">16 min</span>
+      </a>
+      <a class="report-row" href="404.html">
+        <span class="report-num">06</span>
+        <div class="report-text">
+          <h3>Governance for AI-Generated Risk Decisions</h3>
+          <p>What boards should ask before trusting a model's recommendation over an analyst's.</p>
+        </div>
+        <span class="report-time">22 min</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. SIGNALS BY SECTOR ============ -->
+<section class="sector-section">
+  <div class="wrap">
+    <span class="eyebrow">Industry Map</span>
+    <h2>Signals by sector.</h2>
+    <div class="scan-bar"><div class="scan-bar-fill" id="scanBarFill"></div></div>
+    <div class="sector-grid" id="sectorGrid">
+      <div class="sector-cell">
+        <h3>Finance</h3>
+        <p><span class="sector-count" data-count="312">0</span> signals tracked</p>
+      </div>
+      <div class="sector-cell">
+        <h3>Retail</h3>
+        <p><span class="sector-count" data-count="184">0</span> signals tracked</p>
+      </div>
+      <div class="sector-cell">
+        <h3>Healthcare</h3>
+        <p><span class="sector-count" data-count="227">0</span> signals tracked</p>
+      </div>
+      <div class="sector-cell">
+        <h3>Manufacturing</h3>
+        <p><span class="sector-count" data-count="298">0</span> signals tracked</p>
+      </div>
+      <div class="sector-cell">
+        <h3>Energy</h3>
+        <p><span class="sector-count" data-count="156">0</span> signals tracked</p>
+      </div>
+      <div class="sector-cell">
+        <h3>Technology</h3>
+        <p><span class="sector-count" data-count="341">0</span> signals tracked</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. NEWSLETTER ============ -->
+<section class="digest-section">
+  <div class="wrap digest-grid">
+    <div class="digest-text">
+      <h2>Get the signal digest.</h2>
+      <p>One email a week — the emerging risk signals worth knowing about, before they're a headline.</p>
+    </div>
+    <div class="digest-form-wrap">
+      <form class="digest-form" id="digestForm">
+        <input type="email" required placeholder="you@company.com" id="digestEmail">
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+      <p class="digest-fine">No spam. Unsubscribe anytime. ~4,200 risk professionals subscribed.</p>
+      <p class="digest-success" id="digestSuccess">You're on the list — first digest lands this Friday.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html#hero" class="logo">
+          <img class="logo-placeholder logo-placeholder-footer" src="../assets/Logo.webp" alt="Your logo">
+        </a>
+        <p>Enterprise risk systems for organizations that refuse to be caught off guard.</p>
+        <div class="footer-social">
+          <a href="404.html" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          </a>
+          <a href="404.html" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 21v-7h2.5l.5-3H14V9.2c0-.9.3-1.7 1.7-1.7H17V5c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.2V11H8v3h2.6v7"/></svg>
+          </a>
+          <a href="404.html" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="9" width="4" height="10"/><circle cx="5" cy="5" r="1.6"/><path d="M11 19v-6.5a2.5 2.5 0 0 1 5 0V19M11 12.5V19"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <a href="index.html#hero">Home</a>
+        <a href="services.html">Services</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="404.html">Risk Library</a>
+        <a href="404.html">Insight Reports</a>
+        <a href="404.html">Assessment Guide</a>
+        <a href="404.html">Client Portal</a>
+        <a href="404.html">Trust Center</a>
+      </div>
+      <div class="footer-col">
+        <h4>Get In Touch</h4>
+        <ul class="footer-contact">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+            <a href="404.html" target="_blank" rel="noopener">MMR Complex, Periyakollappatty,<br>Chinna Thirupathi, Salem, Tamil<br>Nadu 636008</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5c0 8.8 6.2 15 15 15l2-3.5-5-2-1.5 2C11.5 15 9 12.5 8.5 9.5l2-1.5-2-5z"/></svg>
+            <a href="404.html">0712 371 2345</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+            <a href="404.html">hello@stackly.com</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 STACKLY</span>
+      <span class="status-dot">ALL SYSTEMS MONITORED</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ LOGIN MODAL ============ -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <button type="button" class="modal-close" id="loginModalClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <h3>Welcome back</h3>
+    <p class="modal-sub">Sign in to your Stackly workspace.</p>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="li-email">Email</label>
+        <input id="li-email" type="email" required placeholder="you@company.com">
+      </div>
+      <div class="form-group">
+        <label for="li-pass">Password</label>
+        <input id="li-pass" type="password" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary">Sign In</button>
+    </form>
+    <div class="modal-note" id="loginNote">
+      <p>This is a demo environment, so live sign-in isn't wired up yet — but the team behind it is real. Tell us what you need instead.</p>
+      <a href="mailto:hello@stackly.com" class="btn btn-outline" id="loginNoteCta" style="width:100%; justify-content:center;">Get In Touch</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* =========================================================
+     ALWAYS OPEN AT THE TOP ON REFRESH
+     ========================================================= */
+  (function(){
+    window.scrollTo(0, 0);
+    window.addEventListener('load', function(){
+      window.scrollTo(0, 0);
+      if(window.ScrollTrigger) ScrollTrigger.refresh();
+    });
+  })();
+
+  /* =========================================================
+     HAMBURGER / FULL-SCREEN MOBILE MENU
+     ========================================================= */
+  (function(){
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeBtn = document.getElementById('mobileMenuClose');
+
+    function openMenu(){
+      mobileMenu.style.display = 'flex';
+      void mobileMenu.offsetWidth;
+      mobileMenu.classList.add('open');
+      hamburger.classList.add('active');
+      document.body.classList.add('menu-open');
+      hamburger.setAttribute('aria-expanded', 'true');
+    }
+    function closeMenu(){
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('active');
+      document.body.classList.remove('menu-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      setTimeout(function(){
+        if(!mobileMenu.classList.contains('open')){
+          mobileMenu.style.display = 'none';
+        }
+      }, 350);
+    }
+
+    hamburger.addEventListener('click', function(){
+      const isOpen = mobileMenu.classList.contains('open');
+      isOpen ? closeMenu() : openMenu();
+    });
+    closeBtn.addEventListener('click', closeMenu);
+    document.querySelectorAll('.mobile-menu a').forEach(function(link){
+      link.addEventListener('click', closeMenu);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && mobileMenu.classList.contains('open')) closeMenu();
+    });
+    window.addEventListener('resize', function(){
+      if(window.innerWidth > 720 && mobileMenu.classList.contains('open')) closeMenu();
+    });
+  })();
+
+  /* =========================================================
+     LOGIN MODAL
+     ========================================================= */
+  (function(){
+    const overlay = document.getElementById('loginModal');
+    const closeBtn = document.getElementById('loginModalClose');
+    const form = document.getElementById('loginForm');
+    const note = document.getElementById('loginNote');
+
+    function openModal(){
+      overlay.classList.add('open');
+      document.body.classList.add('modal-open');
+      form.classList.remove('hide');
+      note.classList.remove('show');
+      form.reset();
+    }
+    function closeModal(){
+      overlay.classList.remove('open');
+      document.body.classList.remove('modal-open');
+    }
+    document.querySelectorAll('[data-open-login]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        openModal();
+        const mobileMenu = document.getElementById('mobileMenu');
+        if(mobileMenu.classList.contains('open')){
+          mobileMenu.classList.remove('open');
+          document.getElementById('hamburger').classList.remove('active');
+          document.body.classList.remove('menu-open');
+          setTimeout(function(){ mobileMenu.style.display = 'none'; }, 350);
+        }
+      });
+    });
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', function(e){ if(e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay.classList.contains('open')) closeModal(); });
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      form.classList.add('hide');
+      note.classList.add('show');
+    });
+    document.getElementById('loginNoteCta').addEventListener('click', closeModal);
+  })();
+
+  /* =========================================================
+     SCROLL PROGRESS BAR
+     ========================================================= */
+  (function(){
+    const bar = document.getElementById('scrollProgress');
+    gsap.to(bar, { width: '100%', ease: 'none', scrollTrigger: { scrub: 0.3 } });
+  })();
+
+  /* =========================================================
+     HEADER: subtle shrink + shadow after scrolling
+     ========================================================= */
+  (function(){
+    const header = document.querySelector('header');
+    ScrollTrigger.create({ start: 'top -80', end: 99999, toggleClass: { targets: header, className: 'is-scrolled' } });
+  })();
+
+  /* =========================================================
+     ACTIVE NAV LINK — click-based
+     ========================================================= */
+  (function(){
+    const navLinkEls = document.querySelectorAll('#navLinks a, .mobile-menu-links a');
+    if(!navLinkEls.length) return;
+    navLinkEls.forEach(function(link){
+      link.addEventListener('click', function(){
+        navLinkEls.forEach(function(a){ a.classList.remove('active'); });
+        const href = link.getAttribute('href');
+        navLinkEls.forEach(function(a){
+          if(a.getAttribute('href') === href) a.classList.add('active');
+        });
+      });
+    });
+  })();
+
+  /* =========================================================
+     SMOOTH ANCHOR SCROLL (offset for sticky header)
+     ========================================================= */
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      const id = a.getAttribute('href');
+      if(id.length > 1 && document.querySelector(id)){
+        e.preventDefault();
+        const target = document.querySelector(id);
+        const headerH = document.querySelector('header').offsetHeight;
+        const destY = target.getBoundingClientRect().top + window.scrollY - headerH;
+        const scrollObj = { y: window.scrollY };
+        gsap.to(scrollObj, {
+          y: destY, duration: 0.9, ease: 'power2.inOut',
+          onUpdate: function(){ window.scrollTo(0, scrollObj.y); }
+        });
+      }
+    });
+  });
+
+  /* =========================================================
+     JOURNAL HERO — headline mask-reveal + featured stat count-up
+     ========================================================= */
+  (function(){
+    const h1 = document.getElementById('journalTitle');
+    if(h1){
+      const words = h1.textContent.trim().split(' ');
+      h1.innerHTML = words.map(function(w){
+        return '<span class="word-mask"><span class="word-inner">' + w + '</span></span>';
+      }).join(' ');
+      gsap.set('#journalTitle .word-inner', { yPercent: 115, rotate: 3 });
+      gsap.to('#journalTitle .word-inner', {
+        yPercent: 0, rotate: 0, duration: 1, stagger: 0.08, ease: 'power4.out', delay: 0.1
+      });
+    }
+    gsap.fromTo('.journal-hero .eyebrow', { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out' });
+
+    gsap.fromTo('.featured-main > *', { opacity: 0, y: 20 }, {
+      opacity: 1, y: 0, duration: 0.7, stagger: 0.08, ease: 'power2.out', delay: 0.4
+    });
+
+    const sigEl = document.getElementById('statSignals');
+    const leadEl = document.getElementById('statLeadTime');
+    const sigCounter = { v: 0 };
+    gsap.to(sigCounter, {
+      v: 40, duration: 1.6, delay: 0.7, ease: 'power1.out',
+      onUpdate: function(){ sigEl.textContent = Math.round(sigCounter.v); }
+    });
+    const leadCounter = { v: 0 };
+    gsap.to(leadCounter, {
+      v: 17, duration: 1.6, delay: 0.9, ease: 'power1.out',
+      onUpdate: function(){ leadEl.textContent = Math.round(leadCounter.v) + 'd'; }
+    });
+    gsap.fromTo('.featured-stat', { opacity: 0, y: 16 }, {
+      opacity: 1, y: 0, duration: 0.6, stagger: 0.15, ease: 'power2.out', delay: 0.5
+    });
+  })();
+
+  /* =========================================================
+     EDITOR'S PICKS — flip cards (hover desktop / tap touch)
+     ========================================================= */
+  (function(){
+    const cards = document.querySelectorAll('.pick-card');
+    if(!cards.length) return;
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    cards.forEach(function(card){
+      if(canHover){
+        card.addEventListener('mouseenter', function(){ card.classList.add('flipped'); });
+        card.addEventListener('mouseleave', function(){ card.classList.remove('flipped'); });
+      } else {
+        card.addEventListener('click', function(){
+          const willFlip = !card.classList.contains('flipped');
+          cards.forEach(function(c){ c.classList.remove('flipped'); });
+          if(willFlip) card.classList.add('flipped');
+        });
+      }
+    });
+    gsap.fromTo(cards, { opacity: 0, y: 26 }, {
+      opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+      scrollTrigger: { trigger: '.picks-grid', start: 'top 85%', once: true }
+    });
+  })();
+
+  /* =========================================================
+     RISK SIGNALS — filter pills + staggered row reveal
+     ========================================================= */
+  (function(){
+    const filters = document.querySelectorAll('.filter-pill');
+    const rows = document.querySelectorAll('.signal-row');
+    const emptyMsg = document.getElementById('signalEmpty');
+    if(!filters.length) return;
+
+    gsap.fromTo(rows, { opacity: 0, y: 16 }, {
+      opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out',
+      scrollTrigger: { trigger: '.signal-list', start: 'top 85%', once: true }
+    });
+
+    filters.forEach(function(pill){
+      pill.addEventListener('click', function(){
+        filters.forEach(function(p){ p.classList.remove('active'); });
+        pill.classList.add('active');
+        const cat = pill.dataset.filter;
+        let visibleCount = 0;
+        rows.forEach(function(row){
+          const match = cat === 'all' || row.dataset.category === cat;
+          if(match){
+            row.style.display = '';
+            gsap.fromTo(row, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power1.out' });
+            visibleCount++;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+        emptyMsg.classList.toggle('show', visibleCount === 0);
+      });
+    });
+  })();
+
+  /* =========================================================
+     LONG-FORM REPORTS — staggered row reveal
+     ========================================================= */
+  (function(){
+    const rows = gsap.utils.toArray('.report-row');
+    if(!rows.length) return;
+    gsap.fromTo(rows, { opacity: 0, x: -24 }, {
+      opacity: 1, x: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out',
+      scrollTrigger: { trigger: '.report-list', start: 'top 85%', once: true }
+    });
+  })();
+
+  /* =========================================================
+     SIGNALS BY SECTOR — scan bar fill + count-up + cell reveal
+     ========================================================= */
+  (function(){
+    const section = document.querySelector('.sector-section');
+    if(!section) return;
+    ScrollTrigger.create({
+      trigger: section, start: 'top 75%', once: true,
+      onEnter: function(){
+        gsap.fromTo('#scanBarFill', { width: '0%' }, { width: '100%', duration: 1.4, ease: 'power2.inOut' });
+        document.querySelectorAll('.sector-count').forEach(function(el, i){
+          const target = parseInt(el.dataset.count, 10);
+          const counter = { v: 0 };
+          gsap.to(counter, {
+            v: target, duration: 1.4, delay: 0.3 + i * 0.08, ease: 'power1.out',
+            onUpdate: function(){ el.textContent = Math.round(counter.v).toLocaleString(); }
+          });
+        });
+        gsap.fromTo('.sector-cell', { opacity: 0, y: 20 }, {
+          opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power2.out', delay: 0.2
+        });
+      }
+    });
+  })();
+
+  /* =========================================================
+     NEWSLETTER — submit handler (client-side demo)
+     ========================================================= */
+  (function(){
+    const form = document.getElementById('digestForm');
+    const success = document.getElementById('digestSuccess');
+    if(!form) return;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      gsap.to(form, { opacity: 0, y: -6, duration: 0.25, onComplete: function(){
+        form.style.display = 'none';
+        success.classList.add('show');
+        gsap.fromTo(success, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.4 });
+      }});
+    });
+  })();
+
+  /* =========================================================
+     GENERIC SECTION HEADING REVEALS
+     ========================================================= */
+  (function(){
+    const revealGroups = [
+      '.picks-section .eyebrow',
+      '.signals-section .eyebrow', '.signals-section h2', '.signal-filters',
+      '.reports-section .eyebrow', '.reports-section h2',
+      '.sector-section .eyebrow', '.sector-section h2',
+      '.digest-text h2', '.digest-text p'
+    ];
+    revealGroups.forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){
+        gsap.fromTo(el, { opacity: 0, y: 24 }, {
+          opacity: 1, y: 0, duration: 0.65, ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 90%', once: true }
+        });
+      });
+    });
+  })();
+</script>
+</body>
+</html>

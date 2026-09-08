@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Stackly — Admin Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../css/admindashboard.css" />
+</head>
+<body>
+<div class="dashboard-root">
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <button class="brand-panel" id="brand-home-btn" aria-label="Go to homepage">
+        <span class="brand-logo-slot">
+          <!-- LOGO PLACEHOLDER: swap this src for your logo file -->
+          <img id="brand-logo-img" class="brand-logo-img" src="../assets/Logo.webp" alt="Your logo">
+        </span>
+        
+      </button>
+      <button class="close-btn" id="close-sidebar-btn" aria-label="Close sidebar">✕</button>
+    </div>
+    <div class="sidebar-section-label">Platform</div>
+    <nav class="sidebar-nav" id="nav-main"></nav>
+    <div class="sidebar-section-label">Administration</div>
+    <nav class="sidebar-nav" id="nav-management"></nav>
+
+    <div class="sidebar-user" id="sidebar-user">
+      <div class="sidebar-user-avatar" id="sidebar-user-avatar">–</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebar-user-name">Signed out</div>
+        <div class="sidebar-user-email" id="sidebar-user-email">—</div>
+      </div>
+    </div>
+    <button class="logout-full-btn" id="logout-btn">Sign out</button>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar" id="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger-btn" aria-label="Open menu"><span></span><span></span><span></span></button>
+        <div class="page-title">
+          <h1 id="page-title-text">Overview</h1>
+          <p id="page-sub-text"></p>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-box">
+          <span class="search-icon">⌕</span>
+          <input placeholder="Search risks, analysts, reports…">
+        </div>
+        <button class="icon-btn" id="notif-btn" aria-label="Notices">N<span class="notif-dot"></span></button>
+        <div class="topbar-user" id="topbar-user">
+          <button class="topbar-user-btn" id="topbar-user-btn">
+            <span class="topbar-user-avatar" id="topbar-user-avatar">–</span>
+            <span class="topbar-user-name" id="topbar-user-name">Signed out</span>
+            <span class="topbar-user-caret">▾</span>
+          </button>
+          <div class="topbar-user-menu" id="topbar-user-menu">
+            <div class="topbar-user-menu-email">
+              <div class="label">Email</div>
+              <div class="value" id="topbar-user-email">—</div>
+            </div>
+            <button class="topbar-user-menu-item" data-nav="settings">Settings</button>
+            <button class="topbar-user-menu-item danger" id="topbar-logout-btn">Sign out</button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="content-area" id="content-area"></div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
+  /* ---------- Risk categories ---------- */
+  const riskCategoryAccents = {
+    "Enterprise": "#e8299c",
+    "Operational": "#2dd4bf",
+    "Financial": "#eab308",
+    "Compliance": "#60a5fa",
+    "Cyber": "#f97316"
+  };
+
+  /* ---------- Organizations running on Stackly ---------- */
+  const organizations = [
+    { name: "Meridian Group", plan: "Enterprise", seatsUsed: 42, seatsTotal: 50, riskScore: 6.4, status: "Active", joined: "Jan 2023" },
+    { name: "Northbridge Holdings", plan: "Advanced", seatsUsed: 18, seatsTotal: 25, riskScore: 5.1, status: "Active", joined: "Mar 2024" },
+    { name: "Solvane Group", plan: "Enterprise", seatsUsed: 65, seatsTotal: 75, riskScore: 7.2, status: "Active", joined: "Jun 2022" },
+    { name: "Harrow & Vane Logistics", plan: "Essential", seatsUsed: 8, seatsTotal: 10, riskScore: 4.8, status: "Trial", joined: "Aug 2025" },
+    { name: "Kestrel Financial", plan: "Advanced", seatsUsed: 22, seatsTotal: 25, riskScore: 6.9, status: "Active", joined: "Nov 2023" },
+    { name: "Bramwell Manufacturing", plan: "Essential", seatsUsed: 5, seatsTotal: 10, riskScore: 3.2, status: "Suspended", joined: "Feb 2025" },
+    { name: "Continental Risk Partners", plan: "Enterprise", seatsUsed: 88, seatsTotal: 100, riskScore: 5.6, status: "Active", joined: "May 2021" },
+    { name: "Fenwick Health Systems", plan: "Advanced", seatsUsed: 15, seatsTotal: 25, riskScore: 6.1, status: "Active", joined: "Sep 2024" }
+  ];
+
+  /* ---------- Platform users (across every org) ---------- */
+  const platformUsers = [
+    { name: "Mara Ilić", org: "Meridian Group", role: "Admin", lastActive: "2h ago", status: "Active" },
+    { name: "Tom Okafor", org: "Meridian Group", role: "Analyst", lastActive: "5h ago", status: "Active" },
+    { name: "Priya Nadar", org: "Solvane Group", role: "Admin", lastActive: "1d ago", status: "Active" },
+    { name: "Daniel Voss", org: "Northbridge Holdings", role: "Analyst", lastActive: "3h ago", status: "Active" },
+    { name: "Elena Cho", org: "Kestrel Financial", role: "Analyst", lastActive: "6h ago", status: "Active" },
+    { name: "Marcus Ide", org: "Continental Risk Partners", role: "Admin", lastActive: "2d ago", status: "Suspended" },
+    { name: "Aiko Yamada", org: "Fenwick Health Systems", role: "Analyst", lastActive: "1h ago", status: "Active" },
+    { name: "Jordan Reyes", org: "Harrow & Vane Logistics", role: "Admin", lastActive: "4d ago", status: "Pending" }
+  ];
+
+  /* ---------- Risk taxonomy (platform-wide category config) ---------- */
+  const riskTaxonomy = [
+    { name: "Enterprise", orgsUsing: 8, risksTracked: 214, weight: 22 },
+    { name: "Operational", orgsUsing: 8, risksTracked: 341, weight: 20 },
+    { name: "Financial", orgsUsing: 7, risksTracked: 189, weight: 24 },
+    { name: "Compliance", orgsUsing: 8, risksTracked: 156, weight: 18 },
+    { name: "Cyber", orgsUsing: 8, risksTracked: 267, weight: 16 }
+  ];
+
+  /* ---------- Audit log ---------- */
+  const auditLog = [
+    { time: "Today · 09:14", actor: "Mara Ilić", action: "Updated risk severity", target: "Single-Source Supplier Dependency", org: "Meridian Group" },
+    { time: "Today · 08:02", actor: "System", action: "Auto-flagged new signal", target: "Credential-stuffing spike", org: "Northbridge Holdings" },
+    { time: "Yesterday · 17:40", actor: "Priya Nadar", action: "Closed action item", target: "ACT-1044", org: "Solvane Group" },
+    { time: "Yesterday · 14:15", actor: "Admin (You)", action: "Suspended organization", target: "Bramwell Manufacturing", org: "Platform" },
+    { time: "Yesterday · 11:30", actor: "Daniel Voss", action: "Added new analyst", target: "Elena Cho", org: "Kestrel Financial" },
+    { time: "2 days ago", actor: "System", action: "Nightly risk score recalculation", target: "All Organizations", org: "Platform" },
+    { time: "3 days ago", actor: "Admin (You)", action: "Updated taxonomy weight", target: "Financial category", org: "Platform" },
+    { time: "4 days ago", actor: "Tom Okafor", action: "Exported risk report", target: "Q3 Financial Summary", org: "Meridian Group" }
+  ];
+
+  /* ---------- System health ---------- */
+  const systemServices = [
+    { name: "Risk Engine", status: "operational", uptime: "99.99%" },
+    { name: "Notification Service", status: "operational", uptime: "99.95%" },
+    { name: "Data Ingestion Pipeline", status: "operational", uptime: "99.90%" },
+    { name: "Auth Service (SSO)", status: "operational", uptime: "100%" },
+    { name: "Reporting Service", status: "degraded", uptime: "98.60%" }
+  ];
+
+  /* ---------- Integrations ---------- */
+  const integrations = [
+    { name: "Okta SSO", type: "Identity Provider", status: "Connected", orgsConnected: 5 },
+    { name: "Microsoft Entra ID", type: "Identity Provider", status: "Connected", orgsConnected: 3 },
+    { name: "Slack", type: "Notifications", status: "Connected", orgsConnected: 6 },
+    { name: "Refinitiv Market Data", type: "Data Feed", status: "Connected", orgsConnected: 4 },
+    { name: "Dun & Bradstreet", type: "Data Feed", status: "Connected", orgsConnected: 2 },
+    { name: "Webhook API", type: "Custom", status: "Connected", orgsConnected: 8 }
+  ];
+
+  /* ---------- Billing & plans ---------- */
+  const billingData = [
+    { org: "Meridian Group", plan: "Enterprise", mrr: 4200, nextBilling: "Oct 1", paymentStatus: "Paid" },
+    { org: "Northbridge Holdings", plan: "Advanced", mrr: 1800, nextBilling: "Oct 3", paymentStatus: "Paid" },
+    { org: "Solvane Group", plan: "Enterprise", mrr: 5600, nextBilling: "Oct 5", paymentStatus: "Paid" },
+    { org: "Harrow & Vane Logistics", plan: "Essential", mrr: 600, nextBilling: "Oct 12", paymentStatus: "Trial" },
+    { org: "Kestrel Financial", plan: "Advanced", mrr: 1900, nextBilling: "Oct 8", paymentStatus: "Paid" },
+    { org: "Bramwell Manufacturing", plan: "Essential", mrr: 500, nextBilling: "Sep 28", paymentStatus: "Overdue" },
+    { org: "Continental Risk Partners", plan: "Enterprise", mrr: 7800, nextBilling: "Oct 15", paymentStatus: "Paid" },
+    { org: "Fenwick Health Systems", plan: "Advanced", mrr: 1750, nextBilling: "Oct 20", paymentStatus: "Paid" }
+  ];
+
+  const navItems = [
+    { label: "Overview", id: "dashboard" },
+    { label: "Organizations", id: "orgs" },
+    { label: "User Management", id: "users" },
+    { label: "Risk Taxonomy", id: "taxonomy" },
+    { label: "Audit Log", id: "audit" },
+    { label: "System Health", id: "health" },
+    { label: "Integrations", id: "integrations" },
+    { label: "Billing & Plans", id: "billing" },
+    { label: "Security", id: "security" },
+    { label: "Settings", id: "settings" }
+  ];
+
+  const statusBadgeClass = {
+    "Active": "status-active", "Trial": "status-field", "Suspended": "status-danger",
+    "Pending": "status-field", "Paid": "status-active", "Overdue": "status-danger",
+    "operational": "status-active", "degraded": "status-danger"
+  };
+  const planColor = { "Essential": "#6b6b70", "Advanced": "#2dd4bf", "Enterprise": "#e8299c" };
+
+  const pageMap = {
+    dashboard:    { title: "Overview", sub: "Platform-wide activity this week" },
+    orgs:         { title: "Organizations", sub: "Every organization running on Stackly" },
+    users:        { title: "User Management", sub: "Accounts and roles across the platform" },
+    taxonomy:     { title: "Risk Taxonomy", sub: "Category configuration & weighting" },
+    audit:        { title: "Audit Log", sub: "Every administrative action, tracked" },
+    health:       { title: "System Health", sub: "Live status of core platform services" },
+    integrations: { title: "Integrations", sub: "Connected identity, data & notification systems" },
+    billing:      { title: "Billing & Plans", sub: "Subscriptions and revenue by organization" },
+    security:     { title: "Security", sub: "Platform-wide security policies" },
+    settings:     { title: "Settings", sub: "Profile & preferences" }
+  };
+
+  function getCurrentUser() {
+    try {
+      const raw = localStorage.getItem('user');
+      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+      if (!raw || !isAuthenticated) return null;
+      return JSON.parse(raw);
+    } catch (e) { return null; }
+  }
+  function usernameFromEmail(email) { if (!email) return ''; return email.includes('@') ? email.split('@')[0] : email; }
+  const currentUser = getCurrentUser();
+  const currentEmail = currentUser ? (currentUser.email || '') : '';
+  const currentUsername = currentUser ? usernameFromEmail(currentEmail) : '';
+  const currentInitial = (currentUsername || currentEmail || '?').charAt(0).toUpperCase();
+
+  function paintUserChrome() {
+    const nameToShow = currentUsername || currentEmail || 'Signed out';
+    document.getElementById('sidebar-user-avatar').textContent = currentInitial;
+    document.getElementById('sidebar-user-name').textContent = nameToShow;
+    document.getElementById('sidebar-user-email').textContent = currentEmail || '—';
+    document.getElementById('topbar-user-avatar').textContent = currentInitial;
+    document.getElementById('topbar-user-name').textContent = nameToShow;
+    document.getElementById('topbar-user-email').textContent = currentEmail || '—';
+  }
+  function logout() {
+    localStorage.removeItem('user');
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('activeNav');
+    localStorage.removeItem('settings');
+    window.location.href = 'login.html';
+  }
+
+  function getSavedNav() {
+    try { const saved = localStorage.getItem('activeNav'); if (saved && pageMap[saved]) return saved; } catch (e) {}
+    return 'dashboard';
+  }
+  function loadSettings() {
+    const defaults = {
+      notifications: true, emailDigest: false, darkMode: true, language: "English",
+      twoFactor: true, ssoRequired: true, ipAllowlist: false, autoLock: true, sessionTimeout: "30 minutes"
+    };
+    try { const raw = localStorage.getItem('settings'); if (raw) return Object.assign(defaults, JSON.parse(raw)); } catch (e) {}
+    return defaults;
+  }
+  function saveSettings() { try { localStorage.setItem('settings', JSON.stringify(state.settings)); } catch (e) {} }
+
+  let state = { activeNav: getSavedNav(), orgFilter: "All", userSearch: "", settings: loadSettings() };
+
+  function fmt(n) { return "$" + n.toLocaleString(); }
+  function go404() { window.location.href = "404.html"; }
+  function regionTag(dept) { const c = riskCategoryAccents[dept] || "#e8299c"; return `<span class="region-tag" style="color:${c};border-color:${c};background:${c}1a;">${dept}</span>`; }
+  function planTag(plan) { const c = planColor[plan] || "#6b6b70"; return `<span class="region-tag" style="color:${c};border-color:${c};background:${c}1a;">${plan}</span>`; }
+  function statusBadge(status) { return `<span class="status-badge ${statusBadgeClass[status] || "status-field"}">${status}</span>`; }
+
+  function animateStatBars(){
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.stat-bar-fill, .progress-fill').forEach(el => {
+        const target = el.getAttribute('data-w');
+        if (target) el.style.width = target + '%';
+      });
+    });
+  }
+  function gsapEntrance(){
+    if (typeof gsap === 'undefined') return;
+    gsap.killTweensOf('.stat-card, .card, .team-card, .pub-card, .research-card');
+    gsap.set('.stat-card', { opacity: 0, y: 18 });
+    gsap.to('.stat-card', { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out', stagger: 0.06 });
+    gsap.set('.card, .team-card, .pub-card, .research-card', { opacity: 0, y: 22 });
+    gsap.to('.card, .team-card, .pub-card, .research-card', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.05, delay: 0.08 });
+    document.querySelectorAll('.stat-value').forEach(el => {
+      const raw = el.textContent.trim();
+      const match = raw.match(/^([^\d]*)([\d,]+\.?\d*)(.*)$/);
+      if (!match) return;
+      const prefix = match[1], numStr = match[2].replace(/,/g, ''), suffix = match[3];
+      const num = parseFloat(numStr);
+      if (isNaN(num)) return;
+      const isInt = Number.isInteger(num) && !numStr.includes('.');
+      const counter = { val: 0 };
+      gsap.to(counter, {
+        val: num, duration: 1.1, ease: 'power2.out', delay: 0.15,
+        onUpdate: () => { const shown = isInt ? Math.round(counter.val).toLocaleString() : counter.val.toFixed(1); el.textContent = prefix + shown + suffix; },
+        onComplete: () => { el.textContent = raw; }
+      });
+    });
+  }
+
+  function renderDashboard() {
+    const totalMrr = billingData.reduce((a, b) => a + b.mrr, 0);
+    const needsAttention = organizations.filter(o => o.status !== "Active");
+    const stats = [
+      { delta: "+1 this month", value: String(organizations.length), label: "Organizations Onboarded", bar: 80, accent: true },
+      { delta: "+12 this week", value: "213", label: "Platform Users", bar: 70 },
+      { delta: "+64 this week", value: "1,167", label: "Active Risks (All Orgs)", bar: 65 },
+      { delta: "+8% MoM", value: fmt(totalMrr), label: "Monthly Recurring Revenue", bar: 90 }
+    ];
+    const statsHtml = stats.map(s => `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"><span></span><span class="stat-delta up">${s.delta}</span></div>
+        <div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${s.bar}"></div></div>
+      </div>`).join("");
+
+    const attentionRows = needsAttention.map(o => `<tr onclick="go404()">
+        <td><div class="t-name">${o.name}</div><div class="t-sub">Joined ${o.joined}</div></td>
+        <td>${planTag(o.plan)}</td>
+        <td>${statusBadge(o.status)}</td>
+      </tr>`).join("");
+
+    const auditHtml = auditLog.slice(0, 5).map(a => `<li class="activity-item" onclick="go404()">
+        <span class="act-icon">${a.actor === "System" ? "⚙" : a.actor.charAt(0)}</span>
+        <div class="act-body"><p class="act-text"><strong>${a.actor}</strong> ${a.action.toLowerCase()} — ${a.target}</p><span class="act-time">${a.time} · ${a.org}</span></div>
+      </li>`).join("");
+
+    const healthHtml = systemServices.map(s => `<li class="activity-item" onclick="go404()">
+        <span class="act-icon" style="background:${s.status === "operational" ? "rgba(34,197,94,.14)" : "rgba(239,68,68,.14)"};color:${s.status === "operational" ? "var(--green)" : "var(--red)"}">●</span>
+        <div class="act-body"><p class="act-text">${s.name}</p><span class="act-time">${s.uptime} uptime · ${s.status === "operational" ? "Operational" : "Degraded"}</span></div>
+      </li>`).join("");
+
+    const taxonomyHtml = riskTaxonomy.map(t => `<li class="milestone-item" onclick="go404()">
+        <div class="ms-body" style="flex:1">
+          <div class="ms-event">${t.name}</div>
+          <div class="progress-wrap" style="margin-top:8px"><div class="progress-bar"><div class="progress-fill" data-w="${t.weight}"></div></div><span class="progress-pct">${t.risksTracked} risks</span></div>
+        </div>
+      </li>`).join("");
+
+    return `
+      <section class="stats-grid">${statsHtml}</section>
+      <section class="mid-grid">
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">Organizations Needing Attention</h2><p class="card-sub">Trial ending, suspended, or at risk</p></div></div>
+          <div class="table-wrapper"><table class="runs-table"><thead><tr><th>Organization</th><th>Plan</th><th>Status</th></tr></thead><tbody>${attentionRows || '<tr><td colspan="3" style="color:var(--text-mute)">All organizations in good standing.</td></tr>'}</tbody></table></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">Recent Audit Activity</h2><p class="card-sub">Latest actions across the platform</p></div></div>
+          <ul class="activity-list">${auditHtml}</ul>
+        </div>
+      </section>
+      <section class="bottom-grid">
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">System Health Snapshot</h2><p class="card-sub">Core services, live</p></div></div>
+          <ul class="activity-list">${healthHtml}</ul>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><h2 class="card-title">Risk Volume by Category</h2><p class="card-sub">Platform-wide, all organizations</p></div></div>
+          <ul class="milestone-list">${taxonomyHtml}</ul>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderOrganizations() {
+    const statuses = ["All", "Active", "Trial", "Suspended"];
+    const filtered = state.orgFilter === "All" ? organizations : organizations.filter(o => o.status === state.orgFilter);
+    const stats = [
+      { value: organizations.length, label: "Total Organizations" },
+      { value: organizations.filter(o => o.status === "Active").length, label: "Active", accent: true },
+      { value: organizations.filter(o => o.status === "Trial").length, label: "On Trial" },
+      { value: organizations.filter(o => o.status === "Suspended").length, label: "Suspended" }
+    ];
+    const statsHtml = stats.map((s, i) => { const bar = [100, 75, 30, 15][i];
+      return `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"></div><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${bar}"></div></div></div>`; }).join("");
+
+    const filterHtml = statuses.map(s => `<button class="btn-outline run-filter-btn ${state.orgFilter === s ? "btn-active" : ""}" data-org-filter="${s}">${s}</button>`).join("");
+
+    const rows = filtered.map(o => {
+      const seatPct = Math.round((o.seatsUsed / o.seatsTotal) * 100);
+      return `<tr onclick="go404()">
+        <td><div class="t-name">${o.name}</div><div class="t-sub">Joined ${o.joined}</div></td>
+        <td>${planTag(o.plan)}</td>
+        <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" data-w="${seatPct}"></div></div><span class="progress-pct">${o.seatsUsed}/${o.seatsTotal}</span></div></td>
+        <td class="date-col">${o.riskScore.toFixed(1)}</td>
+        <td>${statusBadge(o.status)}</td>
+      </tr>`;
+    }).join("");
+
+    return `<section class="stats-grid">${statsHtml}</section>
+      <div class="card">
+        <div class="card-header"><div><h2 class="card-title">Organizations</h2><p class="card-sub">Every tenant running on Stackly</p></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">${filterHtml}</div></div>
+        <div class="table-wrapper"><table class="runs-table"><thead><tr><th>Organization</th><th>Plan</th><th>Seats</th><th>Avg Risk Score</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>
+      </div>`;
+  }
+
+  function renderUsers() {
+    const q = state.userSearch.toLowerCase();
+    const filtered = platformUsers.filter(u => u.name.toLowerCase().includes(q) || u.org.toLowerCase().includes(q));
+    const stats = [
+      { value: "213", label: "Total Platform Users", bar: 85, accent: true },
+      { value: platformUsers.filter(u => u.status === "Active").length, label: "Active Today", bar: 70 },
+      { value: platformUsers.filter(u => u.role === "Admin").length, label: "Org Admins", bar: 40 },
+      { value: platformUsers.filter(u => u.status === "Pending").length, label: "Pending Invites", bar: 15 }
+    ];
+    const statsHtml = stats.map(s => `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"></div><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${s.bar}"></div></div></div>`).join("");
+
+    const rows = filtered.map(u => `<tr onclick="go404()">
+        <td><div class="t-name">${u.name}</div><div class="t-sub">${u.org}</div></td>
+        <td class="date-col" style="font-weight:600;color:${u.role === "Admin" ? "var(--pink)" : "var(--text-dim)"}">${u.role}</td>
+        <td class="date-col">${u.lastActive}</td>
+        <td>${statusBadge(u.status)}</td>
+      </tr>`).join("");
+
+    return `<section class="stats-grid">${statsHtml}</section>
+      <div class="card">
+        <div class="card-header"><div><h2 class="card-title">User Directory</h2><p class="card-sub">Every account across every organization</p></div>
+        <div class="search-box" style="flex:0 0 auto"><span class="search-icon">⌕</span><input id="user-search-input" placeholder="Search users or organizations…" value="${state.userSearch}"></div></div>
+        <div class="table-wrapper"><table class="runs-table"><thead><tr><th>User</th><th>Role</th><th>Last Active</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>
+      </div>`;
+  }
+
+  function renderTaxonomy() {
+    const totalRisks = riskTaxonomy.reduce((a, t) => a + t.risksTracked, 0);
+    const avgWeight = Math.round(riskTaxonomy.reduce((a, t) => a + t.weight, 0) / riskTaxonomy.length);
+    const fullCoverage = riskTaxonomy.filter(t => t.orgsUsing === 8).length;
+    const stats = [
+      { value: riskTaxonomy.length, label: "Risk Categories", bar: 100, accent: true },
+      { value: totalRisks.toLocaleString(), label: "Total Risks Tracked", bar: 85 },
+      { value: fullCoverage, label: "Categories at Full Coverage", bar: 60 },
+      { value: avgWeight + "%", label: "Avg. Category Weight", bar: avgWeight }
+    ];
+    const statsHtml = stats.map(s => `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"></div><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${s.bar}"></div></div></div>`).join("");
+
+    const cards = riskTaxonomy.map(t => `<div class="team-card" onclick="go404()">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <span class="member-name" style="font-size:15px">${t.name}</span>
+          ${regionTag(t.name)}
+        </div>
+        <div class="team-card-meta">
+          <div>${t.orgsUsing} of 8 organizations using this category</div>
+          <div>${t.risksTracked} risks currently tracked</div>
+        </div>
+        <div class="progress-wrap" style="margin-top:14px"><div class="progress-bar"><div class="progress-fill" data-w="${t.weight}"></div></div><span class="progress-pct">${t.weight}% weight</span></div>
+      </div>`).join("");
+
+    return `<section class="stats-grid">${statsHtml}</section>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Risk Taxonomy</h2><p class="card-sub">How the composite score is weighted, platform-wide</p></div></div>
+      <div class="team-grid">${cards}</div></div>`;
+  }
+
+  function renderAudit() {
+    const rows = auditLog.map(a => `<li class="activity-item" onclick="go404()">
+        <span class="act-icon">${a.actor === "System" ? "⚙" : a.actor.charAt(0)}</span>
+        <div class="act-body"><p class="act-text"><strong>${a.actor}</strong> ${a.action.toLowerCase()} — ${a.target} <span style="color:var(--text-mute)">(${a.org})</span></p><span class="act-time">${a.time}</span></div>
+      </li>`).join("");
+    return `<div class="card"><div class="card-header"><div><h2 class="card-title">Audit Log</h2><p class="card-sub">Every administrative and system action, in order</p></div></div>
+      <ul class="activity-list">${rows}</ul></div>`;
+  }
+
+  function renderHealth() {
+    const stats = [
+      { value: "99.9%", label: "API Uptime (30d)", bar: 100, accent: true },
+      { value: "1.2s", label: "Avg. Pipeline Latency", bar: 70 },
+      { value: "340", label: "Active Sessions", bar: 65 },
+      { value: "12d ago", label: "Last Incident (Resolved)", bar: 90 }
+    ];
+    const statsHtml = stats.map(s => `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"></div><div class="stat-value" style="font-size:22px">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${s.bar}"></div></div></div>`).join("");
+
+    const rows = systemServices.map(s => `<li class="activity-item" onclick="go404()">
+        <span class="act-icon" style="background:${s.status === "operational" ? "rgba(34,197,94,.14)" : "rgba(239,68,68,.14)"};color:${s.status === "operational" ? "var(--green)" : "var(--red)"}">●</span>
+        <div class="act-body"><p class="act-text">${s.name}</p><span class="act-time">${s.uptime} uptime, last 30 days</span></div>
+        <span class="status-badge ${s.status === "operational" ? "status-active" : "status-danger"}">${s.status === "operational" ? "Operational" : "Degraded"}</span>
+      </li>`).join("");
+
+    return `<section class="stats-grid">${statsHtml}</section>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Service Status</h2><p class="card-sub">Core platform services, live</p></div></div>
+      <ul class="activity-list">${rows}</ul></div>`;
+  }
+
+  function renderIntegrations() {
+    const stats = [
+      { value: integrations.length, label: "Connected Integrations", bar: 90, accent: true },
+      { value: integrations.filter(i => i.type === "Identity Provider").length, label: "Identity Providers", bar: 40 },
+      { value: integrations.filter(i => i.type === "Data Feed").length, label: "Data Feeds", bar: 40 },
+      { value: integrations.reduce((a, i) => a + i.orgsConnected, 0), label: "Total Org Connections", bar: 75 }
+    ];
+    const statsHtml = stats.map(s => `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"></div><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${s.bar}"></div></div></div>`).join("");
+
+    const cards = integrations.map(i => `<div class="pub-card" onclick="go404()">
+        <div class="pub-card-title">${i.name}</div>
+        <div class="pub-card-meta">${i.type} · ${i.orgsConnected} organization${i.orgsConnected !== 1 ? "s" : ""} connected</div>
+        <div class="pub-card-footer">
+          <span class="status-badge status-active">${i.status}</span>
+          <button class="btn-outline pub-view-btn" onclick="event.stopPropagation();go404()">Manage</button>
+        </div>
+      </div>`).join("");
+
+    return `<section class="stats-grid">${statsHtml}</section>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Integrations</h2><p class="card-sub">Identity, data, and notification systems</p></div></div>
+      <div class="pub-grid">${cards}</div></div>`;
+  }
+
+  function renderBilling() {
+    const totalMrr = billingData.reduce((a, b) => a + b.mrr, 0);
+    const paid = billingData.filter(b => b.paymentStatus === "Paid").length;
+    const trial = billingData.filter(b => b.paymentStatus === "Trial").length;
+    const overdue = billingData.filter(b => b.paymentStatus === "Overdue").length;
+    const stats = [
+      { value: fmt(totalMrr), label: "Monthly Recurring Revenue", bar: 90, accent: true },
+      { value: paid, label: "Active Subscriptions", bar: 80 },
+      { value: trial, label: "On Trial", bar: 20 },
+      { value: overdue, label: "Overdue", bar: overdue > 0 ? 15 : 2 }
+    ];
+    const statsHtml = stats.map(s => `<div class="stat-card ${s.accent ? "stat-accent" : ""}" onclick="go404()">
+        <div class="stat-top"></div><div class="stat-value" style="font-size:22px">${s.value}</div><div class="stat-label">${s.label}</div>
+        <div class="stat-bar"><div class="stat-bar-fill" data-w="${s.bar}"></div></div></div>`).join("");
+
+    const rows = billingData.map(b => `<tr onclick="go404()">
+        <td><div class="t-name">${b.org}</div></td>
+        <td>${planTag(b.plan)}</td>
+        <td class="budget-col" style="color:#fff;font-weight:700">${fmt(b.mrr)}</td>
+        <td class="date-col">${b.nextBilling}</td>
+        <td>${statusBadge(b.paymentStatus)}</td>
+      </tr>`).join("");
+
+    return `<section class="stats-grid">${statsHtml}</section>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Billing &amp; Plans</h2><p class="card-sub">Revenue and subscription status by organization</p></div></div>
+      <div class="table-wrapper"><table class="runs-table"><thead><tr><th>Organization</th><th>Plan</th><th>MRR</th><th>Next Billing</th><th>Payment</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  }
+
+  function renderSecurity() {
+    const s = state.settings;
+    return `
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Platform Security Policies</h2><p class="card-sub">Applied across every organization</p></div></div>
+        <div>
+          <div class="pref-row">
+            <div><div class="pref-title">Enforce 2FA for Admins</div><div class="pref-desc">Require two-factor authentication for every org admin account</div></div>
+            ${toggleHtml("twoFactor", s.twoFactor)}
+          </div>
+          <div class="pref-row">
+            <div><div class="pref-title">Require SSO for Enterprise Tier</div><div class="pref-desc">Enterprise-plan organizations must authenticate via SSO</div></div>
+            ${toggleHtml("ssoRequired", s.ssoRequired)}
+          </div>
+          <div class="pref-row">
+            <div><div class="pref-title">IP Allowlist Enforcement</div><div class="pref-desc">Restrict console access to approved IP ranges</div></div>
+            ${toggleHtml("ipAllowlist", s.ipAllowlist)}
+          </div>
+          <div class="pref-row pref-row-last">
+            <div><div class="pref-title">Auto-Lock Inactive Sessions</div><div class="pref-desc">Sign out sessions automatically after inactivity</div></div>
+            ${toggleHtml("autoLock", s.autoLock)}
+          </div>
+        </div>
+      </div>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Session Policy</h2><p class="card-sub">How long an idle session stays signed in</p></div></div>
+        <div class="pref-row pref-row-last">
+          <div><div class="pref-title">Session Timeout</div><div class="pref-desc">Applies to all platform users</div></div>
+          <select class="pref-select" id="timeout-select">${["15 minutes", "30 minutes", "1 hour", "4 hours"].map(t => `<option ${s.sessionTimeout === t ? "selected" : ""}>${t}</option>`).join("")}</select>
+        </div>
+      </div>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Danger Zone</h2><p class="card-sub">Platform-wide security actions</p></div></div>
+        <div class="danger-row">
+          <button class="btn-outline btn-danger" onclick="go404()">Force Log Out All Sessions</button>
+          <button class="btn-outline btn-danger" onclick="go404()">Reset Platform API Keys</button>
+        </div>
+      </div>`;
+  }
+
+  function toggleHtml(id, value) {
+    return `<div class="toggle-switch" data-toggle="${id}" style="background:${value ? "var(--pink)" : "var(--border)"}">
+      <div class="toggle-knob" style="left:${value ? "20px" : "3px"}"></div></div>`;
+  }
+
+  function toggleHtml(id, value) {
+    return `<div class="toggle-switch" data-toggle="${id}" style="background:${value ? "var(--pink)" : "var(--border)"}">
+      <div class="toggle-knob" style="left:${value ? "20px" : "3px"}"></div></div>`;
+  }
+
+  function renderSettings() {
+    const s = state.settings;
+    const displayName = currentUsername || currentEmail || "Signed out";
+    const displayEmail = currentEmail || "No account signed in";
+    return `
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Account</h2><p class="card-sub">Signed-in profile</p></div></div>
+        <div class="account-row">
+          <div class="account-avatar">${currentInitial}</div>
+          <div><div class="account-name">${displayName}</div>
+          <div class="account-email">${displayEmail}</div>
+          <div class="account-role">${currentUser ? (currentUser.role === 'admin' ? 'Administrator account' : 'User account') : 'Not signed in'}</div></div>
+        </div>
+        <button class="btn-outline" onclick="go404()">Edit Profile</button>
+      </div>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Preferences</h2><p class="card-sub">Notifications and display</p></div></div>
+        <div>
+          <div class="pref-row">
+            <div><div class="pref-title">Push Notifications</div><div class="pref-desc">Alerts for new risk signals and status changes</div></div>
+            ${toggleHtml("notifications", s.notifications)}
+          </div>
+          <div class="pref-row">
+            <div><div class="pref-title">Weekly Digest</div><div class="pref-desc">Summary of category activity every Monday</div></div>
+            ${toggleHtml("emailDigest", s.emailDigest)}
+          </div>
+          <div class="pref-row">
+            <div><div class="pref-title">Dark Mode</div><div class="pref-desc">Use a darker colour scheme across the console</div></div>
+            ${toggleHtml("darkMode", s.darkMode)}
+          </div>
+          <div class="pref-row pref-row-last">
+            <div><div class="pref-title">Language</div><div class="pref-desc">Interface display language</div></div>
+            <select class="pref-select" id="lang-select">${["English", "French", "Spanish", "Mandarin", "Portuguese"].map(l => `<option ${s.language === l ? "selected" : ""}>${l}</option>`).join("")}</select>
+          </div>
+        </div>
+      </div>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Session</h2><p class="card-sub">Sign out of this account on this device</p></div></div>
+        <div class="session-row">
+          <div class="session-text">Signed in as <strong>${displayEmail}</strong>. Signing out will clear this session and return you to the sign-in screen.</div>
+          <button class="btn-outline btn-danger" id="settings-logout-btn">Sign out</button>
+        </div>
+      </div>
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Danger Zone</h2><p class="card-sub">Irreversible account actions</p></div></div>
+        <div class="danger-row">
+          <button class="btn-outline btn-danger" onclick="go404()">Reset Password</button>
+          <button class="btn-outline btn-danger" onclick="go404()">Delete Account</button>
+        </div>
+      </div>`;
+  }
+
+  const pageRenderers = { dashboard: renderDashboard, orgs: renderOrganizations, users: renderUsers, taxonomy: renderTaxonomy, audit: renderAudit, health: renderHealth, integrations: renderIntegrations, billing: renderBilling, security: renderSecurity, settings: renderSettings };
+
+  function renderNav() {
+    const mainItems = navItems.slice(0, 6);
+    const mgmtItems = navItems.slice(6);
+    function itemHtml(item) {
+      const needsAttentionCount = organizations.filter(o => o.status !== "Active").length;
+      const badge = item.id === "orgs" && needsAttentionCount > 0 ? `<span class="nav-badge">${needsAttentionCount}</span>` : "";
+      return `<button class="nav-item ${state.activeNav === item.id ? "nav-active" : ""}" data-nav="${item.id}"><span>${item.label}</span>${badge}</button>`;
+    }
+    document.getElementById("nav-main").innerHTML = mainItems.map(itemHtml).join("");
+    document.getElementById("nav-management").innerHTML = mgmtItems.map(itemHtml).join("");
+  }
+
+  function renderPage() {
+    const page = pageMap[state.activeNav];
+    document.getElementById("page-title-text").textContent = page.title;
+    document.getElementById("page-sub-text").textContent = page.sub;
+    document.getElementById("content-area").innerHTML = pageRenderers[state.activeNav]();
+    renderNav();
+    const settingsLogoutBtn = document.getElementById("settings-logout-btn");
+    if (settingsLogoutBtn) settingsLogoutBtn.addEventListener("click", logout);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    animateStatBars();
+    gsapEntrance();
+  }
+
+  function navigateTo(id) {
+    state.activeNav = id;
+    try { localStorage.setItem('activeNav', id); } catch (e) {}
+    closeSidebar();
+    closeTopbarUserMenu();
+    renderPage();
+  }
+
+  function openSidebar() { document.getElementById("sidebar").classList.add("sidebar-open"); document.getElementById("sidebar-overlay").classList.add("show"); }
+  function closeSidebar() { document.getElementById("sidebar").classList.remove("sidebar-open"); document.getElementById("sidebar-overlay").classList.remove("show"); }
+  function closeTopbarUserMenu() { document.getElementById("topbar-user").classList.remove("open"); }
+
+  document.getElementById("hamburger-btn").addEventListener("click", openSidebar);
+  document.getElementById("close-sidebar-btn").addEventListener("click", closeSidebar);
+  document.getElementById("brand-home-btn").addEventListener("click", function() { navigateTo("dashboard"); });
+  document.getElementById("sidebar-overlay").addEventListener("click", closeSidebar);
+  document.getElementById("notif-btn").addEventListener("click", go404);
+  document.getElementById("logout-btn").addEventListener("click", logout);
+  document.getElementById("topbar-logout-btn").addEventListener("click", logout);
+  document.getElementById("topbar-user-btn").addEventListener("click", function(e) { e.stopPropagation(); document.getElementById("topbar-user").classList.toggle("open"); });
+  document.addEventListener("click", closeTopbarUserMenu);
+
+  document.addEventListener("click", function(e) {
+    const navBtn = e.target.closest("[data-nav]");
+    if (navBtn) { navigateTo(navBtn.getAttribute("data-nav")); return; }
+    const filterBtn = e.target.closest(".run-filter-btn");
+    if (filterBtn) { state.orgFilter = filterBtn.getAttribute("data-org-filter"); renderPage(); return; }
+    const toggle = e.target.closest("[data-toggle]");
+    if (toggle) {
+      const key = toggle.getAttribute("data-toggle");
+      state.settings[key] = !state.settings[key];
+      saveSettings();
+      const value = state.settings[key];
+      toggle.style.background = value ? "var(--pink)" : "var(--border)";
+      const knob = toggle.querySelector(".toggle-knob");
+      if (knob) knob.style.left = value ? "20px" : "3px";
+      return;
+    }
+  });
+
+  document.addEventListener("input", function(e) {
+    if (e.target && e.target.id === "user-search-input") {
+      state.userSearch = e.target.value;
+      const caretPos = e.target.selectionStart;
+      renderPage();
+      const input = document.getElementById("user-search-input");
+      if (input) { input.focus(); input.setSelectionRange(caretPos, caretPos); }
+    }
+  });
+
+  document.addEventListener("change", function(e) {
+    if (e.target && e.target.id === "lang-select") { state.settings.language = e.target.value; saveSettings(); }
+    if (e.target && e.target.id === "timeout-select") { state.settings.sessionTimeout = e.target.value; saveSettings(); }
+  });
+
+  paintUserChrome();
+  if (typeof gsap !== 'undefined') {
+    gsap.from('#topbar', { y: -14, opacity: 0, duration: 0.5, ease: 'power2.out' });
+  }
+  renderPage();
+</script>
+</body>
+</html>

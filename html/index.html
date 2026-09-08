@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly — Risk Management</title>
+<script>
+  // Runs before the browser has a chance to restore a previous
+  // scroll position or jump to a leftover #hash on refresh.
+  if('scrollRestoration' in history){ history.scrollRestoration = 'manual'; }
+  if(window.location.hash){
+    try{ history.replaceState(null, '', window.location.pathname + window.location.search); }catch(e){}
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+
+<!-- ============ PRELOADER ============ -->
+<div class="preloader" id="preloader">
+  <div class="preloader-inner">
+    <div class="preloader-ring"></div>
+    <div class="preloader-word">STACKLY</div>
+    <div class="preloader-bar"><div class="preloader-bar-fill" id="preloaderFill"></div></div>
+  </div>
+</div>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <nav class="nav">
+    <a href="#hero" class="logo" data-nav-home>
+      <img class="logo-placeholder" src="../assets/Logo.webp" alt="Your logo">
+      <span class="logo-text-wrap">
+        
+      </span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#hero" class="active">Home</a>
+      <a href="services.html">Services</a>
+      <a href="about.html">About</a>
+      <a href="blog.html">Blog</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="nav-right">
+      <a href="login.html" class="nav-login">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-6 7.5-6s6 2 7.5 6"/></svg>
+        Login
+      </a>
+      <a href="signup.html" class="btn-gold nav-signup">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c1.2-3.4 4.2-5 6.5-5s5.3 1.6 6.5 5"/><path d="M19 8v6M22 11h-6"/></svg>
+        Sign Up
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- ============ MOBILE FULL-SCREEN MENU ============ -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-top">
+    <a href="#hero" class="logo">
+      <img class="logo-placeholder" src="../assets/Logo.webp" alt="Your logo">
+      <span class="logo-text-wrap">
+        
+      </span>
+    </a>
+    <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="mobile-menu-links">
+    <a href="#hero">Home</a>
+    <a href="services.html">Services</a>
+    <a href="about.html">About</a>
+    <a href="blog.html">Blog</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html" class="nav-login" style="text-align:left;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-6 7.5-6s6 2 7.5 6"/></svg>
+      Login
+    </a>
+    <a href="signup.html" class="btn-gold">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c1.2-3.4 4.2-5 6.5-5s5.3 1.6 6.5 5"/><path d="M19 8v6M22 11h-6"/></svg>
+      Sign Up
+    </a>
+  </div>
+</div>
+
+<!-- ============ 1. HERO ============ -->
+<section class="hero" id="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Risk Intelligence Platform</span>
+      <h1 style="margin-top:18px;">Enterprise risk, seen clearly.</h1>
+      <p class="hero-sub">Stackly helps organizations identify, evaluate, and manage risks with clarity, intelligence, and confidence.</p>
+      <div class="hero-actions">
+        <a href="404.html" class="btn btn-primary">Explore Solutions
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="services.html" class="hero-link">How Stackly Works</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">1,240+</div>
+          <div class="stat-label">Organizations Protected</div>
+        </div>
+        <div>
+          <div class="stat-num">24/7</div>
+          <div class="stat-label">Active Monitoring</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-img-box">
+        <img class="hero-photo" src="https://images.unsplash.com/photo-1614064548237-096f735f344f?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" alt="Risk analysis">
+        <svg class="radar" viewBox="0 0 200 200" fill="none">
+          <circle cx="100" cy="100" r="80" stroke="#fff" stroke-opacity=".25" stroke-width="1"/>
+          <circle cx="100" cy="100" r="55" stroke="#fff" stroke-opacity=".25" stroke-width="1"/>
+          <circle cx="100" cy="100" r="30" stroke="#fff" stroke-opacity=".25" stroke-width="1"/>
+          <line x1="100" y1="20" x2="100" y2="180" stroke="#fff" stroke-opacity=".15"/>
+          <line x1="20" y1="100" x2="180" y2="100" stroke="#fff" stroke-opacity=".15"/>
+          <circle class="pulse-dot" cx="130" cy="70" r="5" fill="#e8299c"/>
+          <circle cx="130" cy="70" r="5" fill="#e8299c"/>
+          <circle cx="72" cy="128" r="3.5" fill="#2dd4bf"/>
+          <path d="M100 3v14M100 183v14M3 100h14M183 100h14" stroke="#fff" stroke-opacity=".3" stroke-width="1.4"/>
+        </svg>
+      </div>
+      <div class="hero-stat-card" id="heroStatCard">
+        <span class="hero-stat-label">Risk Exposure</span>
+        <span class="hero-stat-value" id="heroStatValue">0%</span>
+        <span class="hero-stat-delta">↑ 12.4%</span>
+        <div class="hero-stat-divider"></div>
+        <span class="hero-stat-label">Status</span>
+        <span class="hero-stat-status">Monitoring</span>
+      </div>
+      <div class="hero-badge">
+        <span>SCAN /<br>ANALYZE /<br>ACT</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTORS ============ -->
+<section class="sectors">
+  <div class="wrap">
+    <span class="eyebrow">Sectors Under Management</span>
+  </div>
+  <div class="sector-row wrap">
+    <div class="sector-item">Financial Services <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16"/></svg></div>
+    <div class="sector-item">Healthcare <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16"/></svg></div>
+    <div class="sector-item">Manufacturing <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/></svg></div>
+    <div class="sector-item">Technology <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16"/></svg></div>
+    <div class="sector-item">Logistics <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="12" y="4" width="11" height="11" transform="rotate(45 12 12)"/></svg></div>
+    <div class="sector-item">Enterprise <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16"/></svg></div>
+  </div>
+</section>
+
+<!-- ============ 2. RISK DOESN'T LIVE IN ONE PLACE ============ -->
+<section class="risk-everywhere" id="solutions">
+  <div class="wrap re-grid">
+    <div>
+      <h2>Risk doesn't live<br>in one place.</h2>
+      <p>It moves through supply chains, sits inside financial models, hides in outdated systems and shifts with every new regulation. Stackly watches every corner of the business at once, so nothing is left unattended.</p>
+      <div class="chip-row">
+        <button type="button" class="chip" data-chip-target=".tile-1">Operational</button>
+        <button type="button" class="chip" data-chip-target=".tile-4">Financial</button>
+        <button type="button" class="chip" data-chip-target=".tile-2">Cyber</button>
+        <button type="button" class="chip" data-chip-target="#cat-compliance">Compliance</button>
+        <button type="button" class="chip" data-chip-target=".tile-5">Supply Chain</button>
+      </div>
+    </div>
+    <div class="collage">
+      <div class="tile tile-1">
+        <img class="tile-photo" src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Operational risk">
+        <span class="tile-tag">Operational</span>
+        <div class="tile-art"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v6M12 13l-5 4M12 13l5 4"/></svg></div>
+      </div>
+      <div class="tile tile-2">
+        <img class="tile-photo" src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Cyber risk">
+        <span class="tile-tag">Cyber</span>
+        <div class="tile-art"><svg viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="1.5"><path d="M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6l7-3z"/></svg></div>
+      </div>
+      <div class="tile tile-4">
+        <span class="tile-tag">Financial</span>
+        <svg viewBox="0 0 100 60" style="width:100%; height:100%;">
+          <polyline points="4,10 16,16 28,24 40,32 52,38 64,44 76,50 92,56" fill="none" stroke="#ef4444" stroke-width="3"/>
+          <path d="M92,56 84,44 94,44" fill="#ef4444"/>
+        </svg>
+      </div>
+      <div class="tile tile-5">
+        <img class="tile-photo" src="https://images.unsplash.com/photo-1494412651409-8963ce7935a7?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Supply chain risk">
+        <span class="tile-tag">Supply Chain</span>
+        <div class="tile-art"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><rect x="2" y="9" width="12" height="8"/><path d="M14 12h4l3 3v2h-7z"/><circle cx="7" cy="19" r="1.6"/><circle cx="17.5" cy="19" r="1.6"/></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. FOUR STAGES ============ -->
+<section class="stages" id="process">
+  <div class="wrap">
+    <div class="stages-head">
+      <h2>Four stages. One<br>continuous view.</h2>
+      <p>The risk management journey, from first signal to sustained control.</p>
+    </div>
+    <div class="stage-cards" id="stageCards">
+      <button type="button" class="stage-card active">
+        <span class="stage-num">01</span>
+        <h3>Identify</h3>
+        <p>Detect potential risks.</p>
+      </button>
+      <button type="button" class="stage-card">
+        <span class="stage-num">02</span>
+        <h3>Assess</h3>
+        <p>Understand likelihood and impact.</p>
+      </button>
+      <button type="button" class="stage-card">
+        <span class="stage-num">03</span>
+        <h3>Mitigate</h3>
+        <p>Build strategies to reduce exposure.</p>
+      </button>
+      <button type="button" class="stage-card">
+        <span class="stage-num">04</span>
+        <h3>Monitor</h3>
+        <p>Continuously track changing conditions.</p>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY STACKLY (new) ============ -->
+<section class="why-section">
+  <div class="wrap">
+    <div class="why-head">
+      <span class="eyebrow" style="margin-bottom:16px;">Why Teams Switch</span>
+      <h2>Built for people who<br>own the outcome.</h2>
+      <p class="section-sub">Not another dashboard nobody opens. Stackly is built around the workflows risk teams already run.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-card-inner">
+          <div class="why-card-face why-card-front">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            <h3>One system of record</h3>
+            <p>Every register, assessment, and control lives in one place.</p>
+          </div>
+          <div class="why-card-face why-card-back">
+            <h3>One system of record</h3>
+            <p>Every register, assessment, and control lives in one place instead of a dozen spreadsheets — searchable, versioned, and always current.</p>
+          </div>
+        </div>
+      </div>
+      <div class="why-card">
+        <div class="why-card-inner">
+          <div class="why-card-face why-card-front">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3L4 14h7l-1 7 9-11h-7l1-7z"/></svg>
+            <h3>Faster decisions</h3>
+            <p>Act on the top risk first, not the loudest one.</p>
+          </div>
+          <div class="why-card-face why-card-back">
+            <h3>Faster decisions</h3>
+            <p>Scored, ranked exposure means teams act on the top risk first, not the loudest one — with clear ownership at every step.</p>
+          </div>
+        </div>
+      </div>
+      <div class="why-card">
+        <div class="why-card-inner">
+          <div class="why-card-face why-card-front">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+            <h3>Audit-ready by default</h3>
+            <p>Every action is logged automatically for review.</p>
+          </div>
+          <div class="why-card-face why-card-back">
+            <h3>Audit-ready by default</h3>
+            <p>Every change, approval, and mitigation step is logged automatically, timestamped, and exportable for audit.</p>
+          </div>
+        </div>
+      </div>
+      <div class="why-card">
+        <div class="why-card-inner">
+          <div class="why-card-face why-card-front">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>
+            <h3>Built for scale</h3>
+            <p>From one business unit to a global enterprise.</p>
+          </div>
+          <div class="why-card-face why-card-back">
+            <h3>Built for scale</h3>
+            <p>From a single business unit to a global enterprise, without switching tools or re-training teams.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. FEATURES + GAUGE ============ -->
+<section class="features">
+  <div class="wrap">
+    <span class="eyebrow" style="margin-bottom:16px;">Inside The Platform</span>
+    <h2 style="font-size:34px; margin-bottom:40px;">Every stage, one workspace.</h2>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-card-inner">
+          <div class="feat-card-face feat-card-front feat-1">
+            <img class="feat-photo" src="https://images.unsplash.com/photo-1542903660-eedba2cda473?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Risk assessment">
+            <svg class="feat-icon-bg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            <h3>Risk Assessment</h3>
+            <p>Likelihood and impact analysis, scored and ranked across every business unit.</p>
+          </div>
+          <div class="feat-card-face feat-card-back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            <h3>Risk Assessment</h3>
+            <p>Every risk is scored on likelihood and impact, weighted by category and business unit, then ranked so teams know exactly what to work on first.</p>
+          </div>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-inner">
+          <div class="feat-card-face feat-card-front feat-2">
+            <img class="feat-photo" src="https://images.unsplash.com/photo-1544380904-c686aad2fc40?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Smart mitigation">
+            <svg class="feat-icon-bg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v6M12 13l-5 4M12 13l5 4"/></svg>
+            <h3>Smart Mitigation</h3>
+            <p>Action plans generated and prioritized by exposure.</p>
+          </div>
+          <div class="feat-card-face feat-card-back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v6M12 13l-5 4M12 13l5 4"/></svg>
+            <h3>Smart Mitigation</h3>
+            <p>Suggested action plans are generated automatically and prioritized by exposure, with clear owners assigned at every step.</p>
+          </div>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-inner">
+          <div class="feat-card-face feat-card-front feat-3">
+            <img class="feat-photo" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Real-time monitoring">
+            <svg class="feat-icon-bg" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M3 12h4l2 7 4-14 2 7h6"/></svg>
+            <h3>Real-Time Monitoring</h3>
+            <p>Continuous visibility into changing risks as conditions shift.</p>
+          </div>
+          <div class="feat-card-face feat-card-back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12h4l2 7 4-14 2 7h6"/></svg>
+            <h3>Real-Time Monitoring</h3>
+            <p>Signals are scored the moment they appear, so conditions are watched continuously instead of reviewed once a quarter.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gauge-wrap">
+      <svg width="220" height="140" viewBox="0 0 220 140">
+        <path d="M20 120 A90 90 0 0 1 65 39" fill="none" stroke="var(--green)" stroke-width="16" stroke-linecap="round"/>
+        <path d="M65 39 A90 90 0 0 1 110 30" fill="none" stroke="var(--yellow)" stroke-width="16" stroke-linecap="round"/>
+        <path d="M110 30 A90 90 0 0 1 155 39" fill="none" stroke="var(--orange)" stroke-width="16" stroke-linecap="round"/>
+        <path d="M155 39 A90 90 0 0 1 200 120" fill="none" stroke="var(--red)" stroke-width="16" stroke-linecap="round"/>
+        <g id="needle" style="transform-origin:110px 120px; transform:rotate(-90deg);">
+          <line x1="110" y1="120" x2="110" y2="52" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <circle cx="110" cy="120" r="7" fill="#fff"/>
+        <text x="110" y="112" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="26" fill="#fff" font-weight="700" dy="-14">0.0</text>
+      </svg>
+      <div>
+        <div class="gauge-caption">Composite Risk Score</div>
+        <div class="gauge-score" id="gaugeStatus">—</div>
+        <p class="gauge-desc">A single weighted score across operational, financial, cyber and compliance exposure — recalculated continuously as new signals arrive.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. HEATMAP ============ -->
+<section class="heatmap-section" id="risk-map">
+  <div class="wrap">
+    <h2>See risk. Before<br>it escalates.</h2>
+    <div class="heat-layout">
+      <div class="impact-label">IMPACT →</div>
+      <div>
+        <div class="heat-grid" id="heatGrid">
+          <div class="heat-cell"></div><div class="heat-cell"></div><div class="heat-cell"></div><div class="heat-cell hot"></div><div class="heat-cell hot"></div>
+          <div class="heat-cell"></div><div class="heat-cell"></div><div class="heat-cell hot"></div><div class="heat-cell"></div><div class="heat-cell"></div>
+          <div class="heat-cell"></div><div class="heat-cell"></div><div class="heat-cell"></div><div class="heat-cell"></div><div class="heat-cell hot"></div>
+          <div class="heat-cell"></div><div class="heat-cell"></div><div class="heat-cell"></div><div class="heat-cell"></div><div class="heat-cell"></div>
+          <div class="heat-cell"></div><div class="heat-cell"></div><div class="heat-cell"></div><div class="heat-cell"></div><div class="heat-cell hot"></div>
+
+          <div class="heat-point" style="top:6%; left:78%;"></div>
+          <div class="heat-point-label" style="top:2%; left:82%;">Data Exposure</div>
+
+          <div class="heat-point" style="top:26%; left:58%;"></div>
+          <div class="heat-point-label" style="top:22%; left:62%;">Regulatory Change</div>
+
+          <div class="heat-point" style="top:46%; left:78%;"></div>
+          <div class="heat-point-label" style="top:42%; left:82%;">Supply Chain</div>
+
+          <div class="heat-point dim" style="top:66%; left:38%;"></div>
+          <div class="heat-point-label" style="top:62%; left:42%;">Financial Volatility</div>
+        </div>
+        <div class="likelihood-label">LIKELIHOOD →</div>
+        <div class="heat-legend">
+          <div class="heat-legend-item"><span class="heat-legend-dot" style="background:var(--magenta-bright);"></span>Critical exposure — active mitigation</div>
+          <div class="heat-legend-item"><span class="heat-legend-dot" style="background:#8b8b90;"></span>Monitored — within tolerance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. CATEGORY LIST ============ -->
+<section class="cat-section" id="services">
+  <div class="wrap">
+    <h2>A solution for every<br>category of risk.</h2>
+
+    <button type="button" class="cat-row" data-target="#risk-map">
+      <span class="cat-num">01</span>
+      <div class="cat-title"><h3>Enterprise Risk</h3><p>Identify organization-wide risk exposure across every function and region.</p></div>
+      <div class="cat-thumb">
+        <img src="https://images.unsplash.com/photo-1543132220-3ec99c6094dc?q=80&amp;w=400&amp;auto=format&amp;fit=crop" alt="Enterprise risk">
+      </div>
+      <svg class="cat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+
+    <button type="button" class="cat-row" data-target="#process">
+      <span class="cat-num">02</span>
+      <div class="cat-title"><h3>Operational Risk</h3><p>Strengthen processes and operational resilience before they break down.</p></div>
+      <div class="cat-thumb">
+        <img src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?q=80&amp;w=400&amp;auto=format&amp;fit=crop" alt="Operational risk">
+      </div>
+      <svg class="cat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+
+    <button type="button" class="cat-row" data-target="#solutions">
+      <span class="cat-num">03</span>
+      <div class="cat-title"><h3>Financial Risk</h3><p>Protect financial performance and stability against volatility.</p></div>
+      <div class="cat-thumb" style="background:#fff;">
+        <svg width="60" height="34" viewBox="0 0 100 60"><polyline points="4,10 16,16 28,24 40,32 52,38 64,44 76,50 92,56" fill="none" stroke="#ef4444" stroke-width="4"/></svg>
+      </div>
+      <svg class="cat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+
+    <button type="button" class="cat-row" id="cat-compliance" data-target="#cta">
+      <span class="cat-num">04</span>
+      <div class="cat-title"><h3>Compliance Risk</h3><p>Stay prepared for regulatory change before it reaches your desk.</p></div>
+      <div class="cat-thumb">
+        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&amp;w=400&amp;auto=format&amp;fit=crop" alt="Compliance risk">
+      </div>
+      <svg class="cat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+
+    <button type="button" class="cat-row" data-target="#solutions">
+      <span class="cat-num">05</span>
+      <div class="cat-title"><h3>Cyber Risk</h3><p>Understand and reduce digital threats across your infrastructure.</p></div>
+      <div class="cat-thumb">
+        <img src="https://images.unsplash.com/photo-1614064642261-3ccbfafa481b?q=80&amp;w=400&amp;auto=format&amp;fit=crop" alt="Cyber risk">
+      </div>
+      <svg class="cat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ============ 7. HOW WE TURN RISK INTO ACTION ============ -->
+<section class="timeline-section">
+  <div class="wrap">
+    <h2>How we turn risk<br>into action.</h2>
+    <div class="timeline">
+      <div class="tl-step"><div class="tl-dot"></div><p>A signal appears</p></div>
+      <div class="tl-step"><div class="tl-dot"></div><p>The risk is analyzed</p></div>
+      <div class="tl-step"><div class="tl-dot"></div><p>Impact is measured</p></div>
+      <div class="tl-step"><div class="tl-dot"></div><p>A response is created</p></div>
+      <div class="tl-step"><div class="tl-dot"></div><p>The business stays ready</p></div>
+    </div>
+
+    <div class="dash-visual">
+      <div class="dash-card">
+        <span class="eyebrow">Risk Profile</span>
+        <div class="dash-metric"><span>Visibility</span><b>82%</b></div>
+        <div class="dash-metric"><span>Faster Response</span><b>64%</b></div>
+        <div class="dash-metric"><span>Reduced Exposure</span><b>37%</b></div>
+      </div>
+      <div class="dash-mock">
+        <svg viewBox="0 0 220 140">
+          <rect x="0" y="0" width="220" height="140" fill="none"/>
+          <polyline points="0,110 30,90 60,95 90,60 120,70 150,35 180,45 220,15" fill="none" stroke="#e8299c" stroke-width="3"/>
+          <circle cx="220" cy="15" r="4" fill="#e8299c"/>
+          <line x1="0" y1="130" x2="220" y2="130" stroke="#8b8b90" stroke-width="1"/>
+          <rect x="10" y="118" width="10" height="12" fill="#0f7a8c"/>
+          <rect x="40" y="108" width="10" height="22" fill="#0f7a8c"/>
+          <rect x="70" y="98" width="10" height="32" fill="#0f7a8c"/>
+          <rect x="100" y="112" width="10" height="18" fill="#0f7a8c"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. 24/7 MONITORING STAT ============ -->
+<section class="stats-strip">
+  <div class="wrap strip-grid">
+    <div class="big-num">24/7</div>
+    <div class="strip-right">
+      <h3>Risk Monitoring</h3>
+      <p>Conditions are watched continuously, not reviewed once a quarter. Every signal is scored the moment it appears.</p>
+      <div class="mini-chart" id="miniChart"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. TESTIMONIAL ============ -->
+<section class="testimonial" id="company">
+  <div class="wrap test-grid">
+    <div>
+      <div class="test-eyebrow-block">
+        <span class="eyebrow">Centralized Risk View</span>
+        <p>One system of record, replacing scattered spreadsheets and reports.</p>
+      </div>
+      <p class="test-quote" id="quoteText">"Stackly gave us a single, honest view of exposure across the business — something we hadn't had in fifteen years of trying to build it ourselves."</p>
+      <div>
+        <div class="test-name" id="quoteName">Elena Cho</div>
+        <div class="test-role" id="quoteRole">Chief Risk Officer, Meridian Group</div>
+      </div>
+      <div class="test-dots" id="quoteDots">
+        <span class="active" data-i="0">01</span>
+        <span data-i="1">02</span>
+        <span data-i="2">03</span>
+      </div>
+    </div>
+    <div class="test-photo" id="testPhoto">
+      <img id="testPhotoImg" src="https://images.unsplash.com/photo-1581065178047-8ee15951ede6?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Elena Cho">
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. FROM THE RISK ROOM (BLOG) ============ -->
+<section class="blog" id="insights">
+  <div class="wrap">
+    <h2>From the risk room.</h2>
+    <div class="blog-grid">
+      <div class="blog-feature">
+        <a class="blog-feature-img" href="404.html">
+          <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" alt="The hidden cost of operational risk">
+          <span class="blog-feature-overlay"></span>
+        </a>
+        <span class="blog-tag">Featured</span>
+        <h3>The Hidden Cost of Operational Risk</h3>
+      </div>
+      <div>
+        <a class="blog-list-item" href="404.html">
+          <div class="blog-list-thumb">
+            <img src="https://images.unsplash.com/photo-1542903660-eedba2cda473?q=80&amp;w=300&amp;auto=format&amp;fit=crop" alt="How AI is changing risk assessment">
+          </div>
+          <div class="blog-list-text">
+            <span class="blog-tag">AI &amp; Risk</span>
+            <h3>How AI is Changing Risk Assessment</h3>
+          </div>
+        </a>
+        <a class="blog-list-item" href="404.html">
+          <div class="blog-list-thumb">
+            <img src="https://images.unsplash.com/photo-1494412651409-8963ce7935a7?q=80&amp;w=300&amp;auto=format&amp;fit=crop" alt="Preparing for supply chain disruption">
+          </div>
+          <div class="blog-list-text">
+            <span class="blog-tag">Supply Chain</span>
+            <h3>Preparing for Supply Chain Disruption</h3>
+          </div>
+        </a>
+        <a class="blog-list-item" href="404.html">
+          <div class="blog-list-thumb">
+            <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&amp;w=300&amp;auto=format&amp;fit=crop" alt="The future of enterprise resilience">
+          </div>
+          <div class="blog-list-text">
+            <span class="blog-tag">Resilience</span>
+            <h3>The Future of Enterprise Resilience</h3>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11. FINAL CTA ============ -->
+<section class="cta" id="cta">
+  <div class="wrap cta-grid">
+    <div>
+      <h2>The unknown doesn't<br>have to be unmanageable.</h2>
+      <div class="cta-actions">
+        <a href="404.html" class="btn btn-primary">Start Managing Risk
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="404.html" class="btn btn-outline">Talk to an Expert</a>
+      </div>
+    </div>
+    <div class="cta-photo">
+      <img src="https://images.unsplash.com/photo-1543132220-3ec99c6094dc?q=80&amp;w=1000&amp;auto=format&amp;fit=crop" alt="Team managing risk together">
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12. FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#hero" class="logo">
+          <img class="logo-placeholder logo-placeholder-footer" src="../assets/Logo.webp" alt="Your logo">
+        </a>
+        <p>Enterprise risk systems for organizations that refuse to be caught off guard.</p>
+        <div class="footer-social">
+          <a href="404.html" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          </a>
+          <a href="404.html" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 21v-7h2.5l.5-3H14V9.2c0-.9.3-1.7 1.7-1.7H17V5c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.2V11H8v3h2.6v7"/></svg>
+          </a>
+          <a href="404.html" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="9" width="4" height="10"/><circle cx="5" cy="5" r="1.6"/><path d="M11 19v-6.5a2.5 2.5 0 0 1 5 0V19M11 12.5V19"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <a href="#hero">Home</a>
+        <a href="services.html">Services</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="404.html">Risk Library</a>
+        <a href="404.html">Insight Reports</a>
+        <a href="404.html">Assessment Guide</a>
+        <a href="404.html">Client Portal</a>
+        <a href="404.html">Trust Center</a>
+      </div>
+      <div class="footer-col">
+        <h4>Get In Touch</h4>
+        <ul class="footer-contact">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+            <a href="404.html" target="_blank" rel="noopener">MMR Complex, Periyakollappatty,<br>Chinna Thirupathi, Salem, Tamil<br>Nadu 636008</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5c0 8.8 6.2 15 15 15l2-3.5-5-2-1.5 2C11.5 15 9 12.5 8.5 9.5l2-1.5-2-5z"/></svg>
+            <a href="404.html">0712 371 2345</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+            <a href="404.html">hello@stackly.com</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 STACKLY</span>
+      <span class="status-dot">ALL SYSTEMS MONITORED</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* =========================================================
+     PRELOADER — shown on initial page load (with a minimum
+     visible time so it doesn't just flash), and briefly replayed
+     whenever the Home nav link or the logo is clicked.
+     ========================================================= */
+  const stacklyPreloader = (function(){
+    const el = document.getElementById('preloader');
+    const fill = document.getElementById('preloaderFill');
+    if(!el) return { show: function(){}, hide: function(){} };
+
+    function fillBar(duration){
+      gsap.killTweensOf(fill);
+      gsap.fromTo(fill, { width: '0%' }, { width: '100%', duration: duration, ease: 'power1.inOut' });
+    }
+    function show(){
+      el.classList.remove('hide');
+      fillBar(0.6);
+    }
+    function hide(){
+      el.classList.add('hide');
+    }
+
+    // Initial load: keep it visible for a minimum stretch so it
+    // reads as a real loading screen rather than a flicker.
+    const MIN_VISIBLE_MS = 900;
+    const startedAt = Date.now();
+    fillBar(1.2);
+    function finishInitialLoad(){
+      const elapsed = Date.now() - startedAt;
+      setTimeout(hide, Math.max(0, MIN_VISIBLE_MS - elapsed));
+    }
+    if(document.readyState === 'complete'){
+      finishInitialLoad();
+    } else {
+      window.addEventListener('load', finishInitialLoad);
+    }
+    // Safety net in case 'load' never fires for some reason.
+    setTimeout(hide, 4000);
+
+    return { show: show, hide: hide };
+  })();
+
+  (function(){
+    document.querySelectorAll('a[href="#hero"]').forEach(function(link){
+      link.addEventListener('click', function(){
+        stacklyPreloader.show();
+        setTimeout(stacklyPreloader.hide, 700);
+      });
+    });
+  })();
+
+  /* =========================================================
+     ALWAYS OPEN AT THE TOP ON REFRESH.
+     scrollRestoration is already set to 'manual' and any stale
+     #hash already cleared by the inline script in <head> (before
+     the browser gets a chance to restore scroll position). This
+     is the belt-and-braces follow-up once the DOM/assets are in.
+     ========================================================= */
+  (function(){
+    window.scrollTo(0, 0);
+    window.addEventListener('load', function(){
+      window.scrollTo(0, 0);
+      if(window.ScrollTrigger) ScrollTrigger.refresh();
+    });
+  })();
+
+  /* =========================================================
+     HAMBURGER / FULL-SCREEN MOBILE MENU
+     ========================================================= */
+  (function(){
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeBtn = document.getElementById('mobileMenuClose');
+
+    function openMenu(){
+      mobileMenu.style.display = 'flex';
+      void mobileMenu.offsetWidth;
+      mobileMenu.classList.add('open');
+      hamburger.classList.add('active');
+      document.body.classList.add('menu-open');
+      hamburger.setAttribute('aria-expanded', 'true');
+    }
+    function closeMenu(){
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('active');
+      document.body.classList.remove('menu-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      setTimeout(function(){
+        if(!mobileMenu.classList.contains('open')){
+          mobileMenu.style.display = 'none';
+        }
+      }, 350);
+    }
+
+    hamburger.addEventListener('click', function(){
+      const isOpen = mobileMenu.classList.contains('open');
+      isOpen ? closeMenu() : openMenu();
+    });
+    closeBtn.addEventListener('click', closeMenu);
+    document.querySelectorAll('.mobile-menu a').forEach(function(link){
+      link.addEventListener('click', closeMenu);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && mobileMenu.classList.contains('open')) closeMenu();
+    });
+    window.addEventListener('resize', function(){
+      if(window.innerWidth > 720 && mobileMenu.classList.contains('open')) closeMenu();
+    });
+  })();
+
+  /* =========================================================
+     RISK CHIPS -> SCROLL TO MATCHING TILE / ROW + HIGHLIGHT PULSE
+     ========================================================= */
+  (function(){
+    function scrollToTarget(target, callback){
+      const headerH = document.querySelector('header').offsetHeight;
+      const destY = target.getBoundingClientRect().top + window.scrollY - headerH - 24;
+      const scrollObj = { y: window.scrollY };
+      gsap.to(scrollObj, {
+        y: destY, duration: 0.9, ease: 'power2.inOut',
+        onUpdate: function(){ window.scrollTo(0, scrollObj.y); },
+        onComplete: callback
+      });
+    }
+    function pulseHighlight(target){
+      gsap.fromTo(target,
+        { boxShadow: '0 0 0 0 rgba(232,41,156,0)' },
+        { boxShadow: '0 0 0 6px rgba(232,41,156,.45)', duration: .4, ease: 'power2.out', yoyo: true, repeat: 3 }
+      );
+    }
+    document.querySelectorAll('.chip[data-chip-target]').forEach(function(chip){
+      chip.addEventListener('click', function(){
+        const target = document.querySelector(chip.dataset.chipTarget);
+        if(!target) return;
+        scrollToTarget(target, function(){ pulseHighlight(target); });
+      });
+    });
+  })();
+
+  /* =========================================================
+     CATEGORY ROWS -> SMOOTH SCROLL TO RELATED SECTION
+     ========================================================= */
+  (function(){
+    document.querySelectorAll('.cat-row[data-target]').forEach(function(row){
+      row.addEventListener('click', function(){
+        const target = document.querySelector(row.dataset.target);
+        if(!target) return;
+        const headerH = document.querySelector('header').offsetHeight;
+        const destY = target.getBoundingClientRect().top + window.scrollY - headerH;
+        const scrollObj = { y: window.scrollY };
+        gsap.to(scrollObj, {
+          y: destY, duration: 0.9, ease: 'power2.inOut',
+          onUpdate: function(){ window.scrollTo(0, scrollObj.y); }
+        });
+      });
+    });
+  })();
+
+  /* =========================================================
+     SCROLL PROGRESS BAR
+     ========================================================= */
+  (function(){
+    const bar = document.getElementById('scrollProgress');
+    gsap.to(bar, { width: '100%', ease: 'none', scrollTrigger: { scrub: 0.3 } });
+  })();
+
+  /* =========================================================
+     MINI BAR CHART (24/7 monitoring) + animated grow-in
+     ========================================================= */
+  (function(){
+    const container = document.getElementById('miniChart');
+    const values = [30,45,38,60,50,72,64,80,70,90,82,95];
+    const bars = values.map(function(v){
+      const bar = document.createElement('div');
+      bar.className = 'mini-bar';
+      bar.style.height = '0%';
+      bar.dataset.h = v;
+      container.appendChild(bar);
+      return bar;
+    });
+    ScrollTrigger.create({
+      trigger: container, start: 'top 85%', once: true,
+      onEnter: function(){
+        bars.forEach(function(bar, i){
+          gsap.to(bar, { height: bar.dataset.h + '%', duration: 0.8, delay: i * 0.05, ease: 'power3.out' });
+        });
+      }
+    });
+  })();
+
+  /* =========================================================
+     TESTIMONIAL CAROUSEL (text + real photo swap, with fade)
+     ========================================================= */
+  (function(){
+    const quotes = [
+      {
+        text: "\"Stackly gave us a single, honest view of exposure across the business — something we hadn't had in fifteen years of trying to build it ourselves.\"",
+        name: 'Elena Cho', role: 'Chief Risk Officer, Meridian Group',
+        photo: 'https://images.unsplash.com/photo-1581065178047-8ee15951ede6?q=80&w=800&auto=format&fit=crop'
+      },
+      {
+        text: '"We went from quarterly spreadsheets to a live risk picture. Our board finally sees what we see, in real time."',
+        name: 'Marcus Ide', role: 'VP Operations, Northbridge Holdings',
+        photo: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=800&auto=format&fit=crop'
+      },
+      {
+        text: '"The heat map alone changed how we prioritize. We stopped reacting to noise and started focusing on what actually matters."',
+        name: 'Priya Raman', role: 'Head of Compliance, Solvane Group',
+        photo: 'https://images.unsplash.com/photo-1607990283143-e81e7a2c9349?q=80&w=800&auto=format&fit=crop'
+      }
+    ];
+    const textEl = document.getElementById('quoteText');
+    const nameEl = document.getElementById('quoteName');
+    const roleEl = document.getElementById('quoteRole');
+    const photoEl = document.getElementById('testPhoto');
+    const photoImgEl = document.getElementById('testPhotoImg');
+    const dots = document.querySelectorAll('#quoteDots span');
+    let current = 0;
+    let timer;
+
+    function render(i){
+      const q = quotes[i];
+      const tl = gsap.timeline();
+      tl.to([textEl, nameEl, roleEl], { opacity: 0, y: 8, duration: 0.25, ease: 'power1.in' })
+        .to(photoEl, { opacity: 0, duration: 0.25 }, '<')
+        .call(function(){
+          textEl.textContent = q.text;
+          nameEl.textContent = q.name;
+          roleEl.textContent = q.role;
+          if(photoImgEl){ photoImgEl.src = q.photo; photoImgEl.alt = q.name; }
+        })
+        .to([textEl, nameEl, roleEl], { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' })
+        .to(photoEl, { opacity: 1, duration: 0.4 }, '<');
+      dots.forEach(function(d, idx){ d.classList.toggle('active', idx === i); });
+      current = i;
+    }
+    function scheduleNext(){
+      clearInterval(timer);
+      timer = setInterval(function(){ render((current + 1) % quotes.length); }, 6500);
+    }
+    dots.forEach(function(d){
+      d.addEventListener('click', function(){ render(parseInt(d.dataset.i)); scheduleNext(); });
+    });
+    scheduleNext();
+  })();
+
+  /* =========================================================
+     HERO RISK EXPOSURE STAT CARD — count-up + entrance
+     ========================================================= */
+  (function(){
+    const card = document.getElementById('heroStatCard');
+    const valueEl = document.getElementById('heroStatValue');
+    if(!card || !valueEl) return;
+    gsap.fromTo(card, { opacity: 0, y: 24, scale: .92 }, { opacity: 1, y: 0, scale: 1, duration: .9, delay: .9, ease: 'back.out(1.6)' });
+    const counter = { v: 0 };
+    gsap.to(counter, { v: 72, duration: 3, delay: 1.1, ease: 'power1.out', onUpdate: function(){ valueEl.textContent = Math.round(counter.v) + '%'; } });
+  })();
+
+  /* =========================================================
+     FOUR STAGES — clickable cards
+     ========================================================= */
+  (function(){
+    const cards = document.querySelectorAll('#stageCards .stage-card');
+    if(!cards.length) return;
+    cards.forEach(function(card){
+      card.addEventListener('click', function(){
+        if(card.classList.contains('active')) return;
+        cards.forEach(function(c){ c.classList.remove('active'); });
+        card.classList.add('active');
+        gsap.fromTo(card, { scale: .97 }, { scale: 1, duration: .35, ease: 'back.out(2)' });
+      });
+    });
+  })();
+
+  /* =========================================================
+     FLIP CARDS — hover on desktop, tap on touch.
+     Reused for both the "Why Teams Switch" cards and the
+     "Inside The Platform" feature cards.
+     ========================================================= */
+  (function(){
+    function initFlipCards(selector){
+      const cards = document.querySelectorAll(selector);
+      if(!cards.length) return;
+      const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      cards.forEach(function(card){
+        if(canHover){
+          card.addEventListener('mouseenter', function(){ card.classList.add('flipped'); });
+          card.addEventListener('mouseleave', function(){ card.classList.remove('flipped'); });
+        } else {
+          card.addEventListener('click', function(){
+            const willFlip = !card.classList.contains('flipped');
+            cards.forEach(function(c){ c.classList.remove('flipped'); });
+            if(willFlip) card.classList.add('flipped');
+          });
+        }
+      });
+    }
+    initFlipCards('.why-card');
+    initFlipCards('.feat-card');
+  })();
+
+  /* =========================================================
+     BLOG IMAGES — scroll reveal (clip-in) + staggered thumbs
+     ========================================================= */
+  (function(){
+    const feature = document.querySelector('.blog-feature-img');
+    if(feature){
+      gsap.fromTo(feature,
+        { clipPath: 'inset(0 0 100% 0)' },
+        { clipPath: 'inset(0 0 0% 0)', duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: feature, start: 'top 85%', once: true } }
+      );
+    }
+    const thumbs = gsap.utils.toArray('.blog-list-thumb');
+    if(thumbs.length){
+      gsap.fromTo(thumbs, { opacity: 0, scale: .7, rotate: -6 }, {
+        opacity: 1, scale: 1, rotate: 0, duration: .6, stagger: .12, ease: 'back.out(1.9)',
+        scrollTrigger: { trigger: thumbs[0], start: 'top 88%', once: true }
+      });
+    }
+  })();
+
+  /* =========================================================
+     COLLAGE TILES — hover lift + icon nudge
+     ========================================================= */
+  (function(){
+    const tiles = document.querySelectorAll('.risk-everywhere .tile');
+    if(!tiles.length) return;
+    tiles.forEach(function(tile){
+      const art = tile.querySelector('.tile-art, svg');
+      tile.addEventListener('mouseenter', function(){
+        gsap.to(tile, { scale: 1.03, duration: .35, ease: 'power2.out', zIndex: 3 });
+        if(art) gsap.to(art, { scale: 1.12, duration: .35, ease: 'power2.out' });
+      });
+      tile.addEventListener('mouseleave', function(){
+        gsap.to(tile, { scale: 1, duration: .35, ease: 'power2.out', zIndex: 1 });
+        if(art) gsap.to(art, { scale: 1, duration: .35, ease: 'power2.out' });
+      });
+    });
+  })();
+
+  /* =========================================================
+     RISK GAUGE — needle angle, score count-up, and status label
+     are all derived from one RISK_SCORE value so they can never
+     disagree with each other.
+
+     The four colored arcs are NOT equal quarters: green and red
+     each span 60° of the 180° semicircle, yellow and orange each
+     span 30°. Mapped to a 0–10 score (18° per point), that gives:
+       0–3.33   Low        3.33–5    Medium
+       5–6.67   Elevated   6.67–10   Critical
+     Needle: -90deg (score 0, full left) to +90deg (score 10, full
+     right), i.e. rotation = score * 18 - 90 — this traces the
+     same arc the colors are drawn on, so the needle tip always
+     lands visually inside the zone its label reports.
+     ========================================================= */
+  (function(){
+    const gaugeSection = document.querySelector('.gauge-wrap');
+    if(!gaugeSection) return;
+    const needle = document.getElementById('needle');
+    const scoreText = gaugeSection.querySelector('svg text');
+    const statusEl = document.getElementById('gaugeStatus');
+
+    const RISK_SCORE = 6.4;
+    const ZONES = [
+      { max: 10/3, label: 'LOW',      color: 'var(--green)'  },
+      { max: 5,    label: 'MEDIUM',   color: 'var(--yellow)' },
+      { max: 20/3, label: 'ELEVATED', color: 'var(--orange)' },
+      { max: 10,   label: 'CRITICAL', color: 'var(--red)'    }
+    ];
+    function zoneFor(score){
+      return ZONES.find(function(z){ return score <= z.max; }) || ZONES[ZONES.length - 1];
+    }
+    const targetRotation = RISK_SCORE * 18 - 90;
+    const zone = zoneFor(RISK_SCORE);
+
+    ScrollTrigger.create({
+      trigger: gaugeSection, start: 'top 80%', once: true,
+      onEnter: function(){
+        gsap.fromTo(needle, { rotation: -90 }, { rotation: targetRotation, duration: 1.6, ease: 'elastic.out(1, 0.65)', transformOrigin: '110px 120px' });
+        const counter = { v: 0 };
+        gsap.to(counter, {
+          v: RISK_SCORE, duration: 2.6, ease: 'power1.out',
+          onUpdate: function(){ scoreText.textContent = counter.v.toFixed(1); }
+        });
+        if(statusEl){
+          gsap.fromTo(statusEl, { opacity: 0, y: 8 }, {
+            opacity: 1, y: 0, duration: .6, delay: 1.6, ease: 'power2.out',
+            onStart: function(){ statusEl.textContent = zone.label; statusEl.style.color = zone.color; }
+          });
+        }
+      }
+    });
+  })();
+
+  /* =========================================================
+     HEATMAP — points pop in, staggered
+     ========================================================= */
+  (function(){
+    const grid = document.getElementById('heatGrid');
+    if(!grid) return;
+    const points = grid.querySelectorAll('.heat-point');
+    const labels = grid.querySelectorAll('.heat-point-label');
+    gsap.set(points, { scale: 0, transformOrigin: '50% 50%' });
+    gsap.set(labels, { opacity: 0 });
+    ScrollTrigger.create({
+      trigger: grid, start: 'top 80%', once: true,
+      onEnter: function(){
+        gsap.to(points, { scale: 1, duration: 0.5, stagger: 0.15, ease: 'back.out(2.5)' });
+        gsap.to(labels, { opacity: 1, duration: 0.5, stagger: 0.15, delay: 0.15 });
+      }
+    });
+  })();
+
+  /* =========================================================
+     ANIMATED PERCENTAGE / NUMBER COUNTERS
+     ========================================================= */
+  (function(){
+    document.querySelectorAll('.dash-metric b').forEach(function(el){
+      const target = parseInt(el.textContent);
+      const counter = { v: 0 };
+      ScrollTrigger.create({
+        trigger: el, start: 'top 88%', once: true,
+        onEnter: function(){
+          gsap.to(counter, { v: target, duration: 2.2, ease: 'power1.out', onUpdate: function(){ el.textContent = Math.round(counter.v) + '%'; } });
+        }
+      });
+    });
+    const orgStat = document.querySelector('.stat-num');
+    if(orgStat){
+      const counter = { v: 0 };
+      gsap.to(counter, { v: 1240, duration: 2.8, delay: 0.3, ease: 'power1.out', onUpdate: function(){ orgStat.textContent = Math.round(counter.v).toLocaleString() + '+'; } });
+    }
+  })();
+
+  /* =========================================================
+     SCROLL-TRIGGERED SECTION REVEALS
+     ========================================================= */
+  (function(){
+    const revealGroups = [
+      '.hero-sub', '.hero-actions', '.hero-stats',
+      '.re-grid h2', '.re-grid p', '.chip-row',
+      '.stages-head h2', '.stages-head p',
+      '.why-head h2', '.why-head p',
+      '.heatmap-section h2', '.cat-section h2',
+      '.timeline-section h2', '.blog h2',
+      '.cta h2'
+    ];
+    revealGroups.forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){
+        gsap.fromTo(el, { opacity: 0, y: 28 }, {
+          opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+        });
+      });
+    });
+
+    const staggerGroups = [
+      '.sector-item', '.tile', '.stage-card', '.feat-card',
+      '.cat-row', '.tl-step', '.blog-list-item', '.why-card'
+    ];
+    staggerGroups.forEach(function(sel){
+      const items = gsap.utils.toArray(sel);
+      if(!items.length) return;
+      const groups = {};
+      items.forEach(function(el){
+        const parent = el.closest('section') || document.body;
+        (groups[parent.className] = groups[parent.className] || []).push(el);
+      });
+      Object.values(groups).forEach(function(group){
+        gsap.fromTo(group, { opacity: 0, y: 24 }, {
+          opacity: 1, y: 0, duration: 0.6, ease: 'power2.out', stagger: 0.08,
+          scrollTrigger: { trigger: group[0], start: 'top 90%', once: true }
+        });
+      });
+    });
+  })();
+
+  /* =========================================================
+     CTA PHOTO — reveal + light sheen sweep + scroll parallax
+     ========================================================= */
+  (function(){
+    const photoBox = document.querySelector('.cta-photo');
+    const photoImg = photoBox ? photoBox.querySelector('img') : null;
+    if(!photoBox || !photoImg) return;
+
+    ScrollTrigger.create({
+      trigger: photoBox, start: 'top 85%', once: true,
+      onEnter: function(){
+        gsap.fromTo(photoBox, { opacity: 0, scale: .94, y: 24 }, {
+          opacity: 1, scale: 1, y: 0, duration: 1, ease: 'power3.out',
+          onComplete: function(){ photoBox.classList.add('sheen'); }
+        });
+      }
+    });
+
+    gsap.to(photoImg, {
+      yPercent: 8, ease: 'none',
+      scrollTrigger: { trigger: '.cta', start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+  })();
+
+  /* =========================================================
+     SUBTLE PARALLAX ON HERO VISUAL (scroll)
+     ========================================================= */
+  (function(){
+    const heroImg = document.querySelector('.hero-img-box');
+    if(!heroImg) return;
+    gsap.to(heroImg, {
+      backgroundPosition: '50% 70%', ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+    });
+  })();
+
+  /* =========================================================
+     HERO ENTRANCE: headline mask-reveal + badge pop-in
+     ========================================================= */
+  (function(){
+    const h1 = document.querySelector('.hero h1');
+    if(h1){
+      const words = h1.textContent.trim().split(' ');
+      h1.innerHTML = words.map(function(w){
+        return '<span class="word-mask"><span class="word-inner">' + w + '</span></span>';
+      }).join(' ');
+      gsap.set('.hero h1 .word-inner', { yPercent: 115, rotate: 4 });
+      gsap.to('.hero h1 .word-inner', {
+        yPercent: 0, rotate: 0, duration: 1, stagger: 0.09, ease: 'power4.out', delay: 0.15
+      });
+    }
+    const eyebrow = document.querySelector('.hero .eyebrow');
+    if(eyebrow){
+      gsap.fromTo(eyebrow, { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power2.out' });
+    }
+    const badge = document.querySelector('.hero-badge');
+    if(badge){
+      gsap.fromTo(badge, { opacity: 0, scale: 0.5, rotation: -30 }, { opacity: 1, scale: 1, rotation: 0, duration: 1, delay: 0.5, ease: 'back.out(1.8)' });
+    }
+    const imgBox = document.querySelector('.hero-img-box');
+    if(imgBox){
+      gsap.fromTo(imgBox, { opacity: 0, scale: 1.08, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 1.1, ease: 'power3.out' });
+    }
+  })();
+
+  /* =========================================================
+     HERO IMAGE MOUSE-TILT (desktop only)
+     ========================================================= */
+  (function(){
+    const visual = document.querySelector('.hero-visual');
+    const imgBox = document.querySelector('.hero-img-box');
+    if(!visual || !imgBox) return;
+    if(window.matchMedia('(hover: hover) and (pointer: fine)').matches){
+      visual.addEventListener('mousemove', function(e){
+        const rect = visual.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width - 0.5;
+        const py = (e.clientY - rect.top) / rect.height - 0.5;
+        gsap.to(imgBox, { rotateY: px * 8, rotateX: -py * 8, transformPerspective: 700, duration: 0.5, ease: 'power2.out' });
+      });
+      visual.addEventListener('mouseleave', function(){
+        gsap.to(imgBox, { rotateY: 0, rotateX: 0, duration: 0.6, ease: 'power2.out' });
+      });
+    }
+  })();
+
+  /* =========================================================
+     HEADER: subtle shrink + shadow after scrolling
+     ========================================================= */
+  (function(){
+    const header = document.querySelector('header');
+    ScrollTrigger.create({ start: 'top -80', end: 99999, toggleClass: { targets: header, className: 'is-scrolled' } });
+  })();
+
+  /* =========================================================
+     ACTIVE NAV LINK — click-based, not scroll-based.
+     Whichever nav item you click (Home/Services/About/Blog/
+     Contact) stays highlighted while you scroll the page. It only
+     changes when you click a different nav item — scrolling by
+     itself never moves the highlight.
+     ========================================================= */
+  (function(){
+    const navLinkEls = document.querySelectorAll('#navLinks a, .mobile-menu-links a');
+    if(!navLinkEls.length) return;
+    navLinkEls.forEach(function(link){
+      link.addEventListener('click', function(){
+        navLinkEls.forEach(function(a){ a.classList.remove('active'); });
+        // Mark this link (and its counterpart in the other nav —
+        // desktop vs. mobile menu — which share the same href).
+        const href = link.getAttribute('href');
+        navLinkEls.forEach(function(a){
+          if(a.getAttribute('href') === href) a.classList.add('active');
+        });
+      });
+    });
+  })();
+
+  /* =========================================================
+     SMOOTH ANCHOR SCROLL (offset for sticky header)
+     ========================================================= */
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      const id = a.getAttribute('href');
+      if(id.length > 1 && document.querySelector(id)){
+        e.preventDefault();
+        const target = document.querySelector(id);
+        const headerH = document.querySelector('header').offsetHeight;
+        const destY = target.getBoundingClientRect().top + window.scrollY - headerH;
+        const scrollObj = { y: window.scrollY };
+        gsap.to(scrollObj, {
+          y: destY, duration: 0.9, ease: 'power2.inOut',
+          onUpdate: function(){ window.scrollTo(0, scrollObj.y); }
+        });
+      }
+    });
+  });
+</script>
+</body>
+</html>

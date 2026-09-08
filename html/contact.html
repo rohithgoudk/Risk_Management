@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly — Contact</title>
+<script>
+  if('scrollRestoration' in history){ history.scrollRestoration = 'manual'; }
+  if(window.location.hash){
+    try{ history.replaceState(null, '', window.location.pathname + window.location.search); }catch(e){}
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<link rel="stylesheet" href="../css/contact.css">
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <nav class="nav">
+    <a href="index.html#hero" class="logo" data-nav-home>
+      <img class="logo-placeholder" src="../assets/Logo.webp" alt="Your logo">
+      <span class="logo-text-wrap">
+       
+      </span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html#hero">Home</a>
+      <a href="services.html">Services</a>
+      <a href="about.html">About</a>
+      <a href="blog.html">Blog</a>
+      <a href="contact.html" class="active">Contact</a>
+    </div>
+    <div class="nav-right">
+        <a href="login.html" class="nav-login">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-6 7.5-6s6 2 7.5 6"/></svg>
+            Login
+          </a>
+      <a href="signup.html" class="btn-gold nav-signup">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c1.2-3.4 4.2-5 6.5-5s5.3 1.6 6.5 5"/><path d="M19 8v6M22 11h-6"/></svg>
+        Sign Up
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- ============ MOBILE FULL-SCREEN MENU ============ -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-top">
+    <a href="index.html#hero" class="logo">
+      <img class="logo-placeholder" src="../assets/Logo.webp" alt="Your logo">
+      <span class="logo-text-wrap">
+       
+      </span>
+    </a>
+    <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="mobile-menu-links">
+    <a href="index.html#hero">Home</a>
+    <a href="services.html">Services</a>
+    <a href="about.html">About</a>
+    <a href="blog.html">Blog</a>
+    <a href="contact.html" class="active">Contact</a>
+    <a href="login.html" class="nav-login" style="text-align:left;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 5-6 7.5-6s6 2 7.5 6"/></svg>
+        Login
+      </a>
+    <a href="signup.html" class="btn-gold">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c1.2-3.4 4.2-5 6.5-5s5.3 1.6 6.5 5"/><path d="M19 8v6M22 11h-6"/></svg>
+      Sign Up
+    </a>
+  </div>
+</div>
+
+<!-- ============ 1. CONTACT INTRO ============ -->
+<section class="contact-intro">
+  <div class="wrap">
+    <h1>Talk to the risk room.</h1>
+    <p class="section-sub contact-intro-sub">Tell us what you're trying to protect. A risk analyst — not a sales queue — will get back to you.</p>
+  </div>
+</section>
+
+<!-- ============ 2. FIND US SLIDER (map + 2 risk-themed slides) ============ -->
+<section class="finder-section">
+  <div class="wrap">
+    <span class="eyebrow">Find Us</span>
+    <h2>Where the risk room lives.</h2>
+    <div class="slider" id="findSlider">
+      <div class="slider-track" id="sliderTrack">
+
+        <div class="slide">
+          <div class="slide-media slide-map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3907.1616097152896!2d78.1739798!3d11.682956599999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3babefef7fd970bb%3A0xe11aef1a71994f9!2sStackly!5e0!3m2!1sen!2sin!4v1788799290095!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="Stackly location map"></iframe>
+          </div>
+          <div class="slide-text">
+            <span class="slide-tag">Headquarters</span>
+            <h3>Find the risk room on the map.</h3>
+            <p>Drop by, or route a courier — either way, this is where the team watching your exposure actually sits.</p>
+          </div>
+        </div>
+
+        <div class="slide">
+          <div class="slide-media slide-art slide-art-1">
+            <svg viewBox="0 0 320 220" class="slide-svg">
+              <circle cx="160" cy="110" r="80" stroke="#fff" stroke-opacity=".18" stroke-width="1" fill="none"/>
+              <circle cx="160" cy="110" r="55" stroke="#fff" stroke-opacity=".18" stroke-width="1" fill="none"/>
+              <circle cx="160" cy="110" r="30" stroke="#fff" stroke-opacity=".18" stroke-width="1" fill="none"/>
+              <line x1="160" y1="30" x2="160" y2="190" stroke="#fff" stroke-opacity=".12"/>
+              <line x1="80" y1="110" x2="240" y2="110" stroke="#fff" stroke-opacity=".12"/>
+              <circle cx="205" cy="75" r="5" fill="#e8299c" class="pulse-dot"/>
+              <circle cx="205" cy="75" r="5" fill="#e8299c"/>
+              <circle cx="125" cy="140" r="3.5" fill="#2dd4bf"/>
+              <circle cx="185" cy="150" r="3" fill="#2dd4bf"/>
+            </svg>
+          </div>
+          <div class="slide-text">
+            <span class="slide-tag">Response SLA</span>
+            <h3>Under four hours, every time.</h3>
+            <p>Every message is triaged the moment it lands — enterprise accounts get a dedicated line with a 30-minute response window.</p>
+          </div>
+        </div>
+
+        <div class="slide">
+          <div class="slide-media slide-art slide-art-2">
+            <svg viewBox="0 0 320 220" class="slide-svg">
+              <path d="M40 170 L100 100 L150 130 L200 60 L280 150" fill="none" stroke="#2dd4bf" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".8"/>
+              <circle cx="40" cy="170" r="4" fill="#e8299c"/>
+              <circle cx="100" cy="100" r="4" fill="#e8299c"/>
+              <circle cx="150" cy="130" r="4" fill="#e8299c"/>
+              <circle cx="200" cy="60" r="4" fill="#e8299c"/>
+              <circle cx="280" cy="150" r="4" fill="#e8299c"/>
+              <rect x="20" y="188" width="280" height="1" fill="#fff" opacity=".12"/>
+            </svg>
+          </div>
+          <div class="slide-text">
+            <span class="slide-tag">Global Coverage</span>
+            <h3>Signals watched across 65 countries.</h3>
+            <p>Wherever your exposure sits, chances are we're already monitoring that market — ask us what we're seeing in yours.</p>
+          </div>
+        </div>
+
+      </div>
+      <button type="button" class="slider-arrow slider-prev" id="sliderPrev" aria-label="Previous slide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <button type="button" class="slider-arrow slider-next" id="sliderNext" aria-label="Next slide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <div class="slider-dots" id="sliderDots">
+        <span class="active" data-i="0"></span>
+        <span data-i="1"></span>
+        <span data-i="2"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. INFO + FORM ============ -->
+<section class="contact-main-section">
+  <div class="wrap contact-main-grid">
+
+    <div class="contact-info-panel">
+      <div class="info-block">
+        <span class="info-label">Headquarters</span>
+        <h3>Salem,Tamilnadu</h3>
+        <p>MMR Complex, Periyakollappatty,<br>Chinna Thirupathi, Salem, Tamil<br>Nadu 636008</p>
+      </div>
+      <div class="info-block">
+        <span class="info-label">Direct Lines</span>
+        <div class="info-row"><span>General inquiries</span><a href="404.html">hello@stackly.io</a></div>
+        <div class="info-row"><span>Support</span><a href="404.html">support@stackly.io</a></div>
+        <div class="info-row"><span>Press</span><a href="404.html">press@stackly.io</a></div>
+      </div>
+      <div class="info-block">
+        <span class="info-label">Response SLA</span>
+        <div class="sla-line"><span class="sla-dot"></span>Under 4 hours</div>
+        <p>Enterprise accounts receive a dedicated line with a 30-minute response window.</p>
+      </div>
+      <div class="info-block">
+        <span class="info-label">Global Offices</span>
+        <div class="info-row"><span>Salem</span><span class="info-code">SM</span></div>
+        <div class="info-row"><span>Hyderabad</span><span class="info-code">HYD</span></div>
+        <div class="info-row"><span>Banglore</span><span class="info-code">BG</span></div>
+      </div>
+    </div>
+
+    <div class="contact-form-panel">
+      <h3 class="form-panel-title">Send a message</h3>
+      <form id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cf-name">Full Name</label>
+            <input id="cf-name" type="text" required placeholder="Jordan Reyes">
+          </div>
+          <div class="form-group">
+            <label for="cf-email">Work Email</label>
+            <input id="cf-email" type="email" required placeholder="stackly@company.com">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cf-company">Company</label>
+            <input id="cf-company" type="text" required placeholder="Company name">
+          </div>
+          <div class="form-group">
+            <label for="cf-size">Company Size</label>
+            <select id="cf-size">
+              <option>1–50 employees</option>
+              <option>51–200 employees</option>
+              <option>201–1,000 employees</option>
+              <option>1,000+ employees</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Which risk category brings you here?</label>
+          <div class="category-pills" id="categoryPills">
+            <button type="button" class="cat-pill active" data-cat="enterprise">Enterprise</button>
+            <button type="button" class="cat-pill" data-cat="operational">Operational</button>
+            <button type="button" class="cat-pill" data-cat="financial">Financial</button>
+            <button type="button" class="cat-pill" data-cat="compliance">Compliance</button>
+            <button type="button" class="cat-pill" data-cat="cyber">Cyber</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" required placeholder="Tell us what you're trying to protect, and where your current process is falling short."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">Send Message
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+      <div class="form-success" id="formSuccess">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        <h3>Message sent</h3>
+        <p>A risk analyst will get back to you within four hours — sooner if you're on an enterprise line.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html#hero" class="logo">
+          <img class="logo-placeholder logo-placeholder-footer" src="../assets/Logo.webp" alt="Your logo">
+        </a>
+        <p>Enterprise risk systems for organizations that refuse to be caught off guard.</p>
+        <div class="footer-social">
+          <a href="404.html" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          </a>
+          <a href="404.html" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14 21v-7h2.5l.5-3H14V9.2c0-.9.3-1.7 1.7-1.7H17V5c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.2V11H8v3h2.6v7"/></svg>
+          </a>
+          <a href="404.html" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="9" width="4" height="10"/><circle cx="5" cy="5" r="1.6"/><path d="M11 19v-6.5a2.5 2.5 0 0 1 5 0V19M11 12.5V19"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <a href="index.html#hero">Home</a>
+        <a href="services.html">Services</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="404.html">Risk Library</a>
+        <a href="404.html">Insight Reports</a>
+        <a href="404.html">Assessment Guide</a>
+        <a href="404.html">Client Portal</a>
+        <a href="404.html">Trust Center</a>
+      </div>
+      <div class="footer-col">
+        <h4>Get In Touch</h4>
+        <ul class="footer-contact">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+            <a href="404.html" target="_blank" rel="noopener">MMR Complex, Periyakollappatty,<br>Chinna Thirupathi, Salem, Tamil<br>Nadu 636008</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5c0 8.8 6.2 15 15 15l2-3.5-5-2-1.5 2C11.5 15 9 12.5 8.5 9.5l2-1.5-2-5z"/></svg>
+            <a href="404.html">0712 371 2345</a>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+            <a href="404.html">hello@stackly.com</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 STACKLY</span>
+      <span class="status-dot">ALL SYSTEMS MONITORED</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ LOGIN MODAL ============ -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <button type="button" class="modal-close" id="loginModalClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <h3>Welcome back</h3>
+    <p class="modal-sub">Sign in to your Stackly workspace.</p>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="li-email">Email</label>
+        <input id="li-email" type="email" required placeholder="you@company.com">
+      </div>
+      <div class="form-group">
+        <label for="li-pass">Password</label>
+        <input id="li-pass" type="password" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary">Sign In</button>
+    </form>
+    <div class="modal-note" id="loginNote">
+      <p>This is a demo environment, so live sign-in isn't wired up yet — but the team behind it is real. Tell us what you need instead.</p>
+      <a href="mailto:hello@stackly.com" class="btn btn-outline" id="loginNoteCta" style="width:100%; justify-content:center;">Get In Touch</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* =========================================================
+     ALWAYS OPEN AT THE TOP ON REFRESH
+     ========================================================= */
+  (function(){
+    window.scrollTo(0, 0);
+    window.addEventListener('load', function(){
+      window.scrollTo(0, 0);
+      if(window.ScrollTrigger) ScrollTrigger.refresh();
+    });
+  })();
+
+  /* =========================================================
+     HAMBURGER / FULL-SCREEN MOBILE MENU
+     ========================================================= */
+  (function(){
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const closeBtn = document.getElementById('mobileMenuClose');
+
+    function openMenu(){
+      mobileMenu.style.display = 'flex';
+      void mobileMenu.offsetWidth;
+      mobileMenu.classList.add('open');
+      hamburger.classList.add('active');
+      document.body.classList.add('menu-open');
+      hamburger.setAttribute('aria-expanded', 'true');
+    }
+    function closeMenu(){
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('active');
+      document.body.classList.remove('menu-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      setTimeout(function(){
+        if(!mobileMenu.classList.contains('open')){
+          mobileMenu.style.display = 'none';
+        }
+      }, 350);
+    }
+
+    hamburger.addEventListener('click', function(){
+      const isOpen = mobileMenu.classList.contains('open');
+      isOpen ? closeMenu() : openMenu();
+    });
+    closeBtn.addEventListener('click', closeMenu);
+    document.querySelectorAll('.mobile-menu a').forEach(function(link){
+      link.addEventListener('click', closeMenu);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && mobileMenu.classList.contains('open')) closeMenu();
+    });
+    window.addEventListener('resize', function(){
+      if(window.innerWidth > 720 && mobileMenu.classList.contains('open')) closeMenu();
+    });
+  })();
+
+  /* =========================================================
+     LOGIN MODAL
+     ========================================================= */
+  (function(){
+    const overlay = document.getElementById('loginModal');
+    const closeBtn = document.getElementById('loginModalClose');
+    const form = document.getElementById('loginForm');
+    const note = document.getElementById('loginNote');
+
+    function openModal(){
+      overlay.classList.add('open');
+      document.body.classList.add('modal-open');
+      form.classList.remove('hide');
+      note.classList.remove('show');
+      form.reset();
+    }
+    function closeModal(){
+      overlay.classList.remove('open');
+      document.body.classList.remove('modal-open');
+    }
+    document.querySelectorAll('[data-open-login]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        openModal();
+        const mobileMenu = document.getElementById('mobileMenu');
+        if(mobileMenu.classList.contains('open')){
+          mobileMenu.classList.remove('open');
+          document.getElementById('hamburger').classList.remove('active');
+          document.body.classList.remove('menu-open');
+          setTimeout(function(){ mobileMenu.style.display = 'none'; }, 350);
+        }
+      });
+    });
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', function(e){ if(e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay.classList.contains('open')) closeModal(); });
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      form.classList.add('hide');
+      note.classList.add('show');
+    });
+    document.getElementById('loginNoteCta').addEventListener('click', closeModal);
+  })();
+
+  /* =========================================================
+     SCROLL PROGRESS BAR
+     ========================================================= */
+  (function(){
+    const bar = document.getElementById('scrollProgress');
+    gsap.to(bar, { width: '100%', ease: 'none', scrollTrigger: { scrub: 0.3 } });
+  })();
+
+  /* =========================================================
+     HEADER: subtle shrink + shadow after scrolling
+     ========================================================= */
+  (function(){
+    const header = document.querySelector('header');
+    ScrollTrigger.create({ start: 'top -80', end: 99999, toggleClass: { targets: header, className: 'is-scrolled' } });
+  })();
+
+  /* =========================================================
+     ACTIVE NAV LINK — click-based
+     ========================================================= */
+  (function(){
+    const navLinkEls = document.querySelectorAll('#navLinks a, .mobile-menu-links a');
+    if(!navLinkEls.length) return;
+    navLinkEls.forEach(function(link){
+      link.addEventListener('click', function(){
+        navLinkEls.forEach(function(a){ a.classList.remove('active'); });
+        const href = link.getAttribute('href');
+        navLinkEls.forEach(function(a){
+          if(a.getAttribute('href') === href) a.classList.add('active');
+        });
+      });
+    });
+  })();
+
+  /* =========================================================
+     SMOOTH ANCHOR SCROLL (offset for sticky header)
+     ========================================================= */
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      const id = a.getAttribute('href');
+      if(id.length > 1 && document.querySelector(id)){
+        e.preventDefault();
+        const target = document.querySelector(id);
+        const headerH = document.querySelector('header').offsetHeight;
+        const destY = target.getBoundingClientRect().top + window.scrollY - headerH;
+        const scrollObj = { y: window.scrollY };
+        gsap.to(scrollObj, {
+          y: destY, duration: 0.9, ease: 'power2.inOut',
+          onUpdate: function(){ window.scrollTo(0, scrollObj.y); }
+        });
+      }
+    });
+  });
+
+  /* =========================================================
+     CONTACT INTRO — heading + sub reveal
+     ========================================================= */
+  (function(){
+    gsap.fromTo('.contact-intro h1', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.1 });
+    gsap.fromTo('.contact-intro-sub', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.35, ease: 'power2.out' });
+  })();
+
+  /* =========================================================
+     FIND US SLIDER — map + 2 risk-themed slides.
+     Auto-advances, arrows + dots, GSAP crossfade + slide.
+     ========================================================= */
+  (function(){
+    const track = document.getElementById('sliderTrack');
+    const slides = track ? Array.from(track.children) : [];
+    const dots = document.querySelectorAll('#sliderDots span');
+    const prevBtn = document.getElementById('sliderPrev');
+    const nextBtn = document.getElementById('sliderNext');
+    if(!track || !slides.length) return;
+
+    let current = 0;
+    let timer;
+
+    function go(i, instant){
+      const next = (i + slides.length) % slides.length;
+      if(next === current && !instant) return;
+      const dir = next > current || (current === slides.length - 1 && next === 0) ? 1 : -1;
+      const outgoing = slides[current];
+      const incoming = slides[next];
+
+      if(instant){
+        gsap.set(slides, { autoAlpha: 0, xPercent: 0 });
+        gsap.set(incoming, { autoAlpha: 1 });
+      } else {
+        gsap.to(outgoing, { autoAlpha: 0, xPercent: -10 * dir, duration: 0.45, ease: 'power2.inOut' });
+        gsap.fromTo(incoming, { autoAlpha: 0, xPercent: 10 * dir }, { autoAlpha: 1, xPercent: 0, duration: 0.5, ease: 'power2.out' });
+      }
+      dots.forEach(function(d, idx){ d.classList.toggle('active', idx === next); });
+      current = next;
+    }
+
+    function scheduleNext(){
+      clearInterval(timer);
+      timer = setInterval(function(){ go(current + 1); }, 6000);
+    }
+
+    slides.forEach(function(s, i){ gsap.set(s, { position: i === 0 ? 'relative' : 'absolute', top: 0, left: 0, width: '100%' }); });
+    go(0, true);
+    scheduleNext();
+
+    prevBtn.addEventListener('click', function(){ go(current - 1); scheduleNext(); });
+    nextBtn.addEventListener('click', function(){ go(current + 1); scheduleNext(); });
+    dots.forEach(function(d){
+      d.addEventListener('click', function(){ go(parseInt(d.dataset.i, 10)); scheduleNext(); });
+    });
+
+    gsap.fromTo('#findSlider', { opacity: 0, y: 30 }, {
+      opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
+      scrollTrigger: { trigger: '#findSlider', start: 'top 85%', once: true }
+    });
+    gsap.fromTo(['.finder-section .eyebrow', '.finder-section h2'], { opacity: 0, y: 20 }, {
+      opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+      scrollTrigger: { trigger: '.finder-section', start: 'top 85%', once: true }
+    });
+  })();
+
+  /* =========================================================
+     CONTACT INFO PANEL — staggered block reveal
+     ========================================================= */
+  (function(){
+    const blocks = gsap.utils.toArray('.info-block');
+    if(!blocks.length) return;
+    gsap.fromTo(blocks, { opacity: 0, y: 20 }, {
+      opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+      scrollTrigger: { trigger: '.contact-info-panel', start: 'top 85%', once: true }
+    });
+  })();
+
+  /* =========================================================
+     CONTACT FORM PANEL — reveal + category pill select + submit
+     ========================================================= */
+  (function(){
+    const panel = document.querySelector('.contact-form-panel');
+    if(panel){
+      gsap.fromTo(panel, { opacity: 0, y: 24 }, {
+        opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
+        scrollTrigger: { trigger: panel, start: 'top 85%', once: true }
+      });
+    }
+
+    const pills = document.querySelectorAll('.cat-pill');
+    pills.forEach(function(pill){
+      pill.addEventListener('click', function(){
+        pills.forEach(function(p){ p.classList.remove('active'); });
+        pill.classList.add('active');
+        gsap.fromTo(pill, { scale: .94 }, { scale: 1, duration: .3, ease: 'back.out(2)' });
+      });
+    });
+
+    const form = document.getElementById('contactForm');
+    const success = document.getElementById('formSuccess');
+    if(form){
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        gsap.to(form, { opacity: 0, duration: 0.25, onComplete: function(){
+          form.style.display = 'none';
+          success.classList.add('show');
+          gsap.fromTo(success, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4 });
+        }});
+      });
+    }
+  })();
+</script>
+</body>
+</html>
