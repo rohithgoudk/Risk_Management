@@ -203,34 +203,179 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     settings:  { title: "Settings", sub: "Profile & preferences" }
   };
 
-  function getCurrentUser() {
-    try {
-      const raw = localStorage.getItem('user');
-      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-      if (!raw || !isAuthenticated) return null;
-      return JSON.parse(raw);
-    } catch (e) { return null; }
+  /* =========================================================
+     SIGNED-IN USER LOOKUP
+
+     The old version read only localStorage.user and additionally
+     required localStorage.isAuthenticated === 'true'. If the login
+     page saved the account under any other key — or under the same
+     key without that flag — nothing was found, which is why the
+     avatar showed "?", the name showed "Signed out" and the email
+     showed "—".
+
+     This version:
+       1. checks the common key names in localStorage, then in
+          sessionStorage;
+       2. accepts either a JSON object or a bare email string;
+       3. digs into nested objects (e.g. { data: { user: {...} } });
+       4. as a last resort, sweeps every stored key for a value that
+          looks like an email address.
+     Whichever key it found is remembered so sign-out can clear it.
+     ========================================================= */
+  /* A JSON blob like {"Email":"e@gmail.com","role":"user"} contains no
+     whitespace, so a loose pattern such as /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+     matches the entire string and the raw JSON ends up on screen as the
+     "address". This pattern allows only characters that are legal in an
+     address, so braces, quotes, colons and commas rule it out. */
+  const EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  const USER_KEY_CANDIDATES = [
+    'user', 'currentUser', 'loggedInUser', 'authUser', 'stacklyUser',
+    'userData', 'profile', 'account', 'auth', 'session',
+    'userEmail', 'email', 'username'
+  ];
+  const EMAIL_FIELDS = ['email', 'mail', 'useremail', 'emailaddress', 'e-mail', 'username', 'login', 'user'];
+  const NAME_FIELDS = ['name', 'fullname', 'displayname', 'firstname', 'givenname'];
+  let foundUserKey = null;
+
+  function asEmail(v) {
+    if (typeof v !== 'string') return null;
+    const s = v.trim();
+    return EMAIL_RE.test(s) ? s : null;
   }
+
+  function objToUser(obj, depth) {
+    depth = depth || 0;
+    if (!obj || depth > 4) return null;
+    if (typeof obj === 'string') {
+      // Could be a plain address, or a nested/double-encoded JSON string.
+      const direct = asEmail(obj);
+      if (direct) return { email: direct };
+      return rawToUser(obj, depth + 1);
+    }
+    if (Array.isArray(obj)) {
+      for (let i = 0; i < obj.length; i++) {
+        const hit = objToUser(obj[i], depth + 1);
+        if (hit) return hit;
+      }
+      return null;
+    }
+    if (typeof obj !== 'object') return null;
+
+    // Pass 1 — the fields most likely to hold the address, matched
+    // case-insensitively so "Email", "EMAIL" and "email" all work.
+    for (const k in obj) {
+      if (EMAIL_FIELDS.indexOf(String(k).toLowerCase()) === -1) continue;
+      const hit = asEmail(obj[k]);
+      if (hit) return Object.assign({}, obj, { email: hit });
+    }
+    // Pass 2 — any other string value that is an address.
+    for (const k in obj) {
+      const hit = asEmail(obj[k]);
+      if (hit) return Object.assign({}, obj, { email: hit });
+    }
+    // Pass 3 — nested objects and nested JSON strings.
+    for (const k in obj) {
+      const v = obj[k];
+      if (v && typeof v === 'object') {
+        const nested = objToUser(v, depth + 1);
+        if (nested) return nested;
+      } else if (typeof v === 'string' && (v.trim().charAt(0) === '{' || v.trim().charAt(0) === '[')) {
+        const nested = rawToUser(v, depth + 1);
+        if (nested) return nested;
+      }
+    }
+    return null;
+  }
+
+  function rawToUser(raw, depth) {
+    depth = depth || 0;
+    if (!raw || depth > 4) return null;
+    const trimmed = String(raw).trim();
+    if (!trimmed) return null;
+    // Try JSON first. Only a value that fails to parse is considered as
+    // a bare address, which is what stops a JSON blob being mistaken
+    // for one.
+    const first = trimmed.charAt(0);
+    if (first === '{' || first === '[' || first === '"') {
+      try { return objToUser(JSON.parse(trimmed), depth); } catch (e) { /* fall through */ }
+    }
+    const direct = asEmail(trimmed);
+    if (direct) return { email: direct };
+    try { return objToUser(JSON.parse(trimmed), depth); } catch (e) { return null; }
+  }
+
+  function pickName(obj) {
+    if (!obj || typeof obj !== 'object') return '';
+    for (const k in obj) {
+      if (NAME_FIELDS.indexOf(String(k).toLowerCase()) === -1) continue;
+      const v = obj[k];
+      if (typeof v === 'string' && v.trim() && !asEmail(v)) return v.trim();
+    }
+    return '';
+  }
+
+  function getCurrentUser() {
+    const stores = [];
+    try { if (window.localStorage) stores.push(localStorage); } catch (e) {}
+    try { if (window.sessionStorage) stores.push(sessionStorage); } catch (e) {}
+
+    // An explicit signed-out flag still wins.
+    for (let s = 0; s < stores.length; s++) {
+      try { if (stores[s].getItem('isAuthenticated') === 'false') return null; } catch (e) {}
+    }
+    for (let s = 0; s < stores.length; s++) {
+      for (let i = 0; i < USER_KEY_CANDIDATES.length; i++) {
+        const key = USER_KEY_CANDIDATES[i];
+        let hit = null;
+        try { hit = rawToUser(stores[s].getItem(key)); } catch (e) {}
+        if (hit) { foundUserKey = key; return hit; }
+      }
+    }
+    for (let s = 0; s < stores.length; s++) {
+      let len = 0;
+      try { len = stores[s].length; } catch (e) {}
+      for (let i = 0; i < len; i++) {
+        let key = null, hit = null;
+        try { key = stores[s].key(i); hit = rawToUser(stores[s].getItem(key)); } catch (e) {}
+        if (hit) { foundUserKey = key; return hit; }
+      }
+    }
+    return null;
+  }
+
   function usernameFromEmail(email) { if (!email) return ''; return email.includes('@') ? email.split('@')[0] : email; }
+
   const currentUser = getCurrentUser();
-  const currentEmail = currentUser ? (currentUser.email || '') : '';
-  const currentUsername = currentUser ? usernameFromEmail(currentEmail) : '';
-  const currentInitial = (currentUsername || currentEmail || '?').charAt(0).toUpperCase();
+  // Guard again here: only a value that passes the address test is ever
+  // shown, so nothing else can leak into the email line.
+  const currentEmail = currentUser ? (asEmail(currentUser.email) || '') : '';
+  // Use a stored display name if the login page saved one, otherwise
+  // the part of the address before the @.
+  const storedName = currentUser ? pickName(currentUser) : '';
+  const currentUsername = currentEmail || storedName ? (storedName || usernameFromEmail(currentEmail)) : '';
+  // First character of the email address.
+  const currentInitial = ((currentEmail || currentUsername || '?').trim().charAt(0) || '?').toUpperCase();
 
   function paintUserChrome() {
     const nameToShow = currentUsername || currentEmail || 'Signed out';
+    const emailToShow = currentEmail || '—';
     document.getElementById('sidebar-user-avatar').textContent = currentInitial;
     document.getElementById('sidebar-user-name').textContent = nameToShow;
-    document.getElementById('sidebar-user-email').textContent = currentEmail || '—';
+    document.getElementById('sidebar-user-name').setAttribute('title', nameToShow);
+    document.getElementById('sidebar-user-email').textContent = emailToShow;
+    document.getElementById('sidebar-user-email').setAttribute('title', emailToShow);
     document.getElementById('topbar-user-avatar').textContent = currentInitial;
     document.getElementById('topbar-user-name').textContent = nameToShow;
-    document.getElementById('topbar-user-email').textContent = currentEmail || '—';
+    document.getElementById('topbar-user-email').textContent = emailToShow;
   }
+
   function logout() {
-    localStorage.removeItem('user');
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('activeNav');
-    localStorage.removeItem('settings');
+    const keys = ['user', 'isAuthenticated', 'activeNav', 'settings'].concat(USER_KEY_CANDIDATES);
+    if (foundUserKey && keys.indexOf(foundUserKey) === -1) keys.push(foundUserKey);
+    keys.forEach(function (k) {
+      try { localStorage.removeItem(k); } catch (e) {}
+      try { sessionStorage.removeItem(k); } catch (e) {}
+    });
     window.location.href = 'login.html';
   }
 
@@ -656,8 +801,38 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     renderPage();
   }
 
-  function openSidebar() { document.getElementById("sidebar").classList.add("sidebar-open"); document.getElementById("sidebar-overlay").classList.add("show"); }
-  function closeSidebar() { document.getElementById("sidebar").classList.remove("sidebar-open"); document.getElementById("sidebar-overlay").classList.remove("show"); }
+  /* ---------------------------------------------------------
+     SIDEBAR OPEN / CLOSE
+     While the sidebar is open we add .nav-open to <html> and
+     <body>; dashboard.css sets overflow:hidden on both, so the
+     page underneath can't be scrolled. The scroll position is
+     remembered and restored on close so the page doesn't jump
+     back to the top when the sidebar is dismissed.
+     --------------------------------------------------------- */
+  let savedScrollY = 0;
+
+  function lockPageScroll() {
+    savedScrollY = window.scrollY || window.pageYOffset || 0;
+    document.documentElement.classList.add("nav-open");
+    document.body.classList.add("nav-open");
+  }
+  function unlockPageScroll() {
+    if (!document.body.classList.contains("nav-open")) return;
+    document.documentElement.classList.remove("nav-open");
+    document.body.classList.remove("nav-open");
+    window.scrollTo(0, savedScrollY);
+  }
+
+  function openSidebar() {
+    document.getElementById("sidebar").classList.add("sidebar-open");
+    document.getElementById("sidebar-overlay").classList.add("show");
+    lockPageScroll();
+  }
+  function closeSidebar() {
+    document.getElementById("sidebar").classList.remove("sidebar-open");
+    document.getElementById("sidebar-overlay").classList.remove("show");
+    unlockPageScroll();
+  }
   function closeTopbarUserMenu() { document.getElementById("topbar-user").classList.remove("open"); }
 
   document.getElementById("hamburger-btn").addEventListener("click", openSidebar);
@@ -669,6 +844,16 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   document.getElementById("topbar-logout-btn").addEventListener("click", logout);
   document.getElementById("topbar-user-btn").addEventListener("click", function(e) { e.stopPropagation(); document.getElementById("topbar-user").classList.toggle("open"); });
   document.addEventListener("click", closeTopbarUserMenu);
+
+  /* Escape closes the sidebar, and widening past the mobile
+     breakpoint releases the lock so the desktop layout is never
+     left with a frozen page. */
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") closeSidebar();
+  });
+  window.addEventListener("resize", function() {
+    if (window.innerWidth > 960) closeSidebar();
+  });
 
   document.addEventListener("click", function(e) {
     const navBtn = e.target.closest("[data-nav]");

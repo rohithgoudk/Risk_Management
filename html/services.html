@@ -329,12 +329,19 @@
   </div>
 </footer>
 
-<!-- ============ LOGIN MODAL (new) ============ -->
+<!-- ============ LOGIN MODAL ============ -->
 <div class="modal-overlay" id="loginModal">
   <div class="modal-box">
     <button type="button" class="modal-close" id="loginModalClose" aria-label="Close">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
+
+    <!-- Stackly logo holder. Swap the src to change the logo — sizing
+         is handled by .modal-logo img in services.css. -->
+    <div class="modal-logo">
+      <img src="../assets/Logo.webp" alt="Stackly">
+    </div>
+
     <h3>Welcome back</h3>
     <p class="modal-sub">Sign in to your Stackly workspace.</p>
     <form id="loginForm">
@@ -590,7 +597,14 @@
   })();
 
   /* =========================================================
-     SERVICES — alternating slide-in rows + pricing table stagger
+     SERVICES — alternating slide-in rows + pricing table stagger.
+
+     NOTE ON HORIZONTAL SCROLL: the "from" state below pushes the
+     media/text 40px sideways before the row animates in. That
+     overshoot used to leak past the right edge of the viewport and
+     create a horizontal scrollbar. It is now contained by
+     `overflow-x:clip` on .services-section (see services.css), so
+     the offsets can stay as designed.
      ========================================================= */
   (function(){
     document.querySelectorAll('.service-row').forEach(function(row){

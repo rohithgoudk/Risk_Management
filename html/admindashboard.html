@@ -196,34 +196,156 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     settings:     { title: "Settings", sub: "Profile & preferences" }
   };
 
-  function getCurrentUser() {
-    try {
-      const raw = localStorage.getItem('user');
-      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-      if (!raw || !isAuthenticated) return null;
-      return JSON.parse(raw);
-    } catch (e) { return null; }
+  /* =========================================================
+     SIGNED-IN USER LOOKUP
+     Reads the account whatever key and shape the login page used:
+     the usual key names in localStorage then sessionStorage, a JSON
+     object or a bare email string, nested objects, and finally a
+     sweep of every stored key. JSON is parsed before anything is
+     treated as an address, because a serialized object has no
+     spaces and would otherwise match a loose email pattern.
+     ========================================================= */
+  const EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+  const USER_KEY_CANDIDATES = [
+    'user', 'currentUser', 'loggedInUser', 'authUser', 'stacklyUser',
+    'userData', 'profile', 'account', 'auth', 'session',
+    'userEmail', 'email', 'username'
+  ];
+  const EMAIL_FIELDS = ['email', 'mail', 'useremail', 'emailaddress', 'e-mail', 'username', 'login', 'user'];
+  const NAME_FIELDS = ['name', 'fullname', 'displayname', 'firstname', 'givenname'];
+  const ROLE_FIELDS = ['role', 'userrole', 'accounttype', 'type'];
+  let foundUserKey = null;
+
+  function asEmail(v) {
+    if (typeof v !== 'string') return null;
+    const s = v.trim();
+    return EMAIL_RE.test(s) ? s : null;
   }
+
+  function objToUser(obj, depth) {
+    depth = depth || 0;
+    if (!obj || depth > 4) return null;
+    if (typeof obj === 'string') {
+      const direct = asEmail(obj);
+      if (direct) return { email: direct };
+      return rawToUser(obj, depth + 1);
+    }
+    if (Array.isArray(obj)) {
+      for (let i = 0; i < obj.length; i++) {
+        const hit = objToUser(obj[i], depth + 1);
+        if (hit) return hit;
+      }
+      return null;
+    }
+    if (typeof obj !== 'object') return null;
+    // Pass 1 — likeliest field names, matched case-insensitively so
+    // "Email", "EMAIL" and "email" all work.
+    for (const k in obj) {
+      if (EMAIL_FIELDS.indexOf(String(k).toLowerCase()) === -1) continue;
+      const hit = asEmail(obj[k]);
+      if (hit) return Object.assign({}, obj, { email: hit });
+    }
+    // Pass 2 — any other string value that is an address.
+    for (const k in obj) {
+      const hit = asEmail(obj[k]);
+      if (hit) return Object.assign({}, obj, { email: hit });
+    }
+    // Pass 3 — nested objects and nested JSON strings.
+    for (const k in obj) {
+      const v = obj[k];
+      if (v && typeof v === 'object') {
+        const nested = objToUser(v, depth + 1);
+        if (nested) return nested;
+      } else if (typeof v === 'string' && (v.trim().charAt(0) === '{' || v.trim().charAt(0) === '[')) {
+        const nested = rawToUser(v, depth + 1);
+        if (nested) return nested;
+      }
+    }
+    return null;
+  }
+
+  function rawToUser(raw, depth) {
+    depth = depth || 0;
+    if (!raw || depth > 4) return null;
+    const trimmed = String(raw).trim();
+    if (!trimmed) return null;
+    const first = trimmed.charAt(0);
+    if (first === '{' || first === '[' || first === '"') {
+      try { return objToUser(JSON.parse(trimmed), depth); } catch (e) { /* fall through */ }
+    }
+    const direct = asEmail(trimmed);
+    if (direct) return { email: direct };
+    try { return objToUser(JSON.parse(trimmed), depth); } catch (e) { return null; }
+  }
+
+  function pickField(obj, fields) {
+    if (!obj || typeof obj !== 'object') return '';
+    for (const k in obj) {
+      if (fields.indexOf(String(k).toLowerCase()) === -1) continue;
+      const v = obj[k];
+      if (typeof v === 'string' && v.trim() && !asEmail(v)) return v.trim();
+    }
+    return '';
+  }
+
+  function getCurrentUser() {
+    const stores = [];
+    try { if (window.localStorage) stores.push(localStorage); } catch (e) {}
+    try { if (window.sessionStorage) stores.push(sessionStorage); } catch (e) {}
+
+    for (let s = 0; s < stores.length; s++) {
+      try { if (stores[s].getItem('isAuthenticated') === 'false') return null; } catch (e) {}
+    }
+    for (let s = 0; s < stores.length; s++) {
+      for (let i = 0; i < USER_KEY_CANDIDATES.length; i++) {
+        const key = USER_KEY_CANDIDATES[i];
+        let hit = null;
+        try { hit = rawToUser(stores[s].getItem(key)); } catch (e) {}
+        if (hit) { foundUserKey = key; return hit; }
+      }
+    }
+    for (let s = 0; s < stores.length; s++) {
+      let len = 0;
+      try { len = stores[s].length; } catch (e) {}
+      for (let i = 0; i < len; i++) {
+        let key = null, hit = null;
+        try { key = stores[s].key(i); hit = rawToUser(stores[s].getItem(key)); } catch (e) {}
+        if (hit) { foundUserKey = key; return hit; }
+      }
+    }
+    return null;
+  }
+
   function usernameFromEmail(email) { if (!email) return ''; return email.includes('@') ? email.split('@')[0] : email; }
+
   const currentUser = getCurrentUser();
-  const currentEmail = currentUser ? (currentUser.email || '') : '';
-  const currentUsername = currentUser ? usernameFromEmail(currentEmail) : '';
-  const currentInitial = (currentUsername || currentEmail || '?').charAt(0).toUpperCase();
+  const currentEmail = currentUser ? (asEmail(currentUser.email) || '') : '';
+  const storedName = currentUser ? pickField(currentUser, NAME_FIELDS) : '';
+  const currentRole = currentUser ? pickField(currentUser, ROLE_FIELDS).toLowerCase() : '';
+  const currentUsername = (currentEmail || storedName) ? (storedName || usernameFromEmail(currentEmail)) : '';
+  // First character of the email address.
+  const currentInitial = ((currentEmail || currentUsername || '?').trim().charAt(0) || '?').toUpperCase();
 
   function paintUserChrome() {
     const nameToShow = currentUsername || currentEmail || 'Signed out';
+    const emailToShow = currentEmail || '—';
     document.getElementById('sidebar-user-avatar').textContent = currentInitial;
     document.getElementById('sidebar-user-name').textContent = nameToShow;
-    document.getElementById('sidebar-user-email').textContent = currentEmail || '—';
+    document.getElementById('sidebar-user-name').setAttribute('title', nameToShow);
+    document.getElementById('sidebar-user-email').textContent = emailToShow;
+    document.getElementById('sidebar-user-email').setAttribute('title', emailToShow);
     document.getElementById('topbar-user-avatar').textContent = currentInitial;
     document.getElementById('topbar-user-name').textContent = nameToShow;
-    document.getElementById('topbar-user-email').textContent = currentEmail || '—';
+    document.getElementById('topbar-user-email').textContent = emailToShow;
   }
+
   function logout() {
-    localStorage.removeItem('user');
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('activeNav');
-    localStorage.removeItem('settings');
+    const keys = ['user', 'isAuthenticated', 'activeNav', 'settings'].concat(USER_KEY_CANDIDATES);
+    if (foundUserKey && keys.indexOf(foundUserKey) === -1) keys.push(foundUserKey);
+    keys.forEach(function (k) {
+      try { localStorage.removeItem(k); } catch (e) {}
+      try { sessionStorage.removeItem(k); } catch (e) {}
+    });
     window.location.href = 'login.html';
   }
 
@@ -248,6 +370,19 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   function regionTag(dept) { const c = riskCategoryAccents[dept] || "#e8299c"; return `<span class="region-tag" style="color:${c};border-color:${c};background:${c}1a;">${dept}</span>`; }
   function planTag(plan) { const c = planColor[plan] || "#6b6b70"; return `<span class="region-tag" style="color:${c};border-color:${c};background:${c}1a;">${plan}</span>`; }
   function statusBadge(status) { return `<span class="status-badge ${statusBadgeClass[status] || "status-field"}">${status}</span>`; }
+
+  /* =========================================================
+     TOPBAR HEIGHT
+     Below 960px the header is position:fixed, so the content needs
+     an equal top offset. Measuring it keeps the two in step no
+     matter how the header wraps at a given width.
+     ========================================================= */
+  function syncTopbarHeight() {
+    const tb = document.getElementById('topbar');
+    if (!tb) return;
+    const h = tb.offsetHeight;
+    if (h) document.documentElement.style.setProperty('--topbar-h', h + 'px');
+  }
 
   function animateStatBars(){
     requestAnimationFrame(() => {
@@ -422,7 +557,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
         <div class="stat-bar"><div class="stat-bar-fill" data-w="${s.bar}"></div></div></div>`).join("");
 
     const cards = riskTaxonomy.map(t => `<div class="team-card" onclick="go404()">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px">
           <span class="member-name" style="font-size:15px">${t.name}</span>
           ${regionTag(t.name)}
         </div>
@@ -564,11 +699,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
       <div class="toggle-knob" style="left:${value ? "20px" : "3px"}"></div></div>`;
   }
 
-  function toggleHtml(id, value) {
-    return `<div class="toggle-switch" data-toggle="${id}" style="background:${value ? "var(--pink)" : "var(--border)"}">
-      <div class="toggle-knob" style="left:${value ? "20px" : "3px"}"></div></div>`;
-  }
-
   function renderSettings() {
     const s = state.settings;
     const displayName = currentUsername || currentEmail || "Signed out";
@@ -579,7 +709,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
           <div class="account-avatar">${currentInitial}</div>
           <div><div class="account-name">${displayName}</div>
           <div class="account-email">${displayEmail}</div>
-          <div class="account-role">${currentUser ? (currentUser.role === 'admin' ? 'Administrator account' : 'User account') : 'Not signed in'}</div></div>
+          <div class="account-role">${currentUser ? (currentRole === 'admin' ? 'Administrator account' : 'User account') : 'Not signed in'}</div></div>
         </div>
         <button class="btn-outline" onclick="go404()">Edit Profile</button>
       </div>
@@ -640,6 +770,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     const settingsLogoutBtn = document.getElementById("settings-logout-btn");
     if (settingsLogoutBtn) settingsLogoutBtn.addEventListener("click", logout);
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    syncTopbarHeight();
     animateStatBars();
     gsapEntrance();
   }
@@ -652,8 +783,38 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     renderPage();
   }
 
-  function openSidebar() { document.getElementById("sidebar").classList.add("sidebar-open"); document.getElementById("sidebar-overlay").classList.add("show"); }
-  function closeSidebar() { document.getElementById("sidebar").classList.remove("sidebar-open"); document.getElementById("sidebar-overlay").classList.remove("show"); }
+  /* =========================================================
+     SIDEBAR OPEN / CLOSE
+     While the sidebar is open, .nav-open goes on <html> and
+     <body>; admindashboard.css sets overflow:hidden on both so
+     the page underneath can't be scrolled. The scroll position is
+     saved and restored so dismissing the sidebar doesn't jump
+     back to the top.
+     ========================================================= */
+  let savedScrollY = 0;
+
+  function lockPageScroll() {
+    savedScrollY = window.scrollY || window.pageYOffset || 0;
+    document.documentElement.classList.add("nav-open");
+    document.body.classList.add("nav-open");
+  }
+  function unlockPageScroll() {
+    if (!document.body.classList.contains("nav-open")) return;
+    document.documentElement.classList.remove("nav-open");
+    document.body.classList.remove("nav-open");
+    window.scrollTo(0, savedScrollY);
+  }
+
+  function openSidebar() {
+    document.getElementById("sidebar").classList.add("sidebar-open");
+    document.getElementById("sidebar-overlay").classList.add("show");
+    lockPageScroll();
+  }
+  function closeSidebar() {
+    document.getElementById("sidebar").classList.remove("sidebar-open");
+    document.getElementById("sidebar-overlay").classList.remove("show");
+    unlockPageScroll();
+  }
   function closeTopbarUserMenu() { document.getElementById("topbar-user").classList.remove("open"); }
 
   document.getElementById("hamburger-btn").addEventListener("click", openSidebar);
@@ -665,6 +826,20 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   document.getElementById("topbar-logout-btn").addEventListener("click", logout);
   document.getElementById("topbar-user-btn").addEventListener("click", function(e) { e.stopPropagation(); document.getElementById("topbar-user").classList.toggle("open"); });
   document.addEventListener("click", closeTopbarUserMenu);
+
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") closeSidebar();
+  });
+  window.addEventListener("resize", function() {
+    if (window.innerWidth > 960) closeSidebar();
+    syncTopbarHeight();
+  });
+  window.addEventListener("orientationchange", syncTopbarHeight);
+  window.addEventListener("load", syncTopbarHeight);
+  if (document.fonts && document.fonts.ready) {
+    // Web fonts change the header's height once they land.
+    document.fonts.ready.then(syncTopbarHeight);
+  }
 
   document.addEventListener("click", function(e) {
     const navBtn = e.target.closest("[data-nav]");
@@ -704,6 +879,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     gsap.from('#topbar', { y: -14, opacity: 0, duration: 0.5, ease: 'power2.out' });
   }
   renderPage();
+  syncTopbarHeight();
 </script>
 </body>
 </html>

@@ -161,6 +161,18 @@
             <span class="field-error" id="su-password-error">Password must be at least 10 characters.</span>
           </div>
 
+          <div class="field">
+            <label class="field-label" for="su-confirm-password">Confirm Password</label>
+            <div class="field-input-wrap" id="su-confirm-password-wrap">
+              <input type="password" id="su-confirm-password" placeholder="Re-enter your password" autocomplete="new-password">
+              <button type="button" class="field-toggle" id="suConfirmPwToggle" aria-label="Show password">
+                <svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="eye-off" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0112 19c-7 0-11-7-11-7a21.6 21.6 0 015.06-6.06M9.9 4.24A10.94 10.94 0 0112 4c7 0 11 7 11 7a21.6 21.6 0 01-2.66 3.79"/><path d="M14.12 14.12a3 3 0 11-4.24-4.24"/><path d="M1 1l22 22"/></svg>
+              </button>
+            </div>
+            <span class="field-error" id="su-confirm-password-error">Passwords do not match.</span>
+          </div>
+
           <div class="signup-terms-row">
             <label class="remember-check">
               <input type="checkbox" id="su-terms">
@@ -393,21 +405,25 @@
   })();
 
   /* =========================================================
-     PASSWORD SHOW/HIDE
+     PASSWORD SHOW/HIDE (Password + Confirm Password)
      ========================================================= */
   (function(){
-    const toggle = document.getElementById('suPwToggle');
-    const input = document.getElementById('su-password');
-    if(!toggle || !input) return;
-    const eye = toggle.querySelector('.eye');
-    const eyeOff = toggle.querySelector('.eye-off');
-    toggle.addEventListener('click', function(){
-      const showing = input.type === 'password';
-      input.type = showing ? 'text' : 'password';
-      eye.style.display = showing ? 'none' : 'block';
-      eyeOff.style.display = showing ? 'block' : 'none';
-      toggle.setAttribute('aria-label', showing ? 'Hide password' : 'Show password');
-    });
+    function wireToggle(toggleId, inputId){
+      const toggle = document.getElementById(toggleId);
+      const input = document.getElementById(inputId);
+      if(!toggle || !input) return;
+      const eye = toggle.querySelector('.eye');
+      const eyeOff = toggle.querySelector('.eye-off');
+      toggle.addEventListener('click', function(){
+        const showing = input.type === 'password';
+        input.type = showing ? 'text' : 'password';
+        eye.style.display = showing ? 'none' : 'block';
+        eyeOff.style.display = showing ? 'block' : 'none';
+        toggle.setAttribute('aria-label', showing ? 'Hide password' : 'Show password');
+      });
+    }
+    wireToggle('suPwToggle', 'su-password');
+    wireToggle('suConfirmPwToggle', 'su-confirm-password');
   })();
 
   /* =========================================================
@@ -452,7 +468,8 @@
       'su-last-name': { wrap: 'su-last-name-wrap', error: 'su-last-name-error', type: 'name' },
       'su-work-email': { wrap: 'su-email-wrap', error: 'su-email-error', type: 'email' },
       'su-company': { wrap: 'su-company-wrap', error: 'su-company-error', type: 'required' },
-      'su-password': { wrap: 'su-password-wrap', error: 'su-password-error', type: 'password' }
+      'su-password': { wrap: 'su-password-wrap', error: 'su-password-error', type: 'password' },
+      'su-confirm-password': { wrap: 'su-confirm-password-wrap', error: 'su-confirm-password-error', type: 'confirm' }
     };
 
     function isValidEmail(v){
@@ -475,6 +492,7 @@
       if(cfg.type === 'name') ok = isValidName(val);
       else if(cfg.type === 'email') ok = isValidEmail(val);
       else if(cfg.type === 'password') ok = val.length >= 10;
+      else if(cfg.type === 'confirm') ok = val.length > 0 && val === document.getElementById('su-password').value;
       else if(cfg.type === 'required') ok = val.trim().length > 0;
       setInvalid(cfg.wrap, cfg.error, !ok);
       return ok;
@@ -483,6 +501,13 @@
     Object.keys(fields).forEach(function(id){
       document.getElementById(id).addEventListener('input', function(){
         setInvalid(fields[id].wrap, fields[id].error, false);
+        // Re-check confirm-password live if the main password changes after a confirm attempt
+        if(id === 'su-password'){
+          const confirmInput = document.getElementById('su-confirm-password');
+          if(confirmInput.value.length > 0){
+            setInvalid(fields['su-confirm-password'].wrap, fields['su-confirm-password'].error, false);
+          }
+        }
       });
     });
 

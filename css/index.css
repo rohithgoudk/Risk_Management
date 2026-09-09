@@ -858,6 +858,46 @@
     .hero-stat-value{font-size:24px;}
     .sector-row{grid-template-columns:repeat(2,1fr);}
     .re-grid h2, .stages-head h2, .heatmap-section h2, .services-hero h2, .cat-section h2, .timeline-section h2, .blog h2, .why-head h2{font-size:27px;}
+
+    /* ---------------------------------------------------------
+       FIX 1 — UNIFORM COLLAGE TILES ON MOBILE
+       On desktop the four tiles are absolutely positioned at
+       different widths (52% / 34% / 44% / 34%) and two different
+       aspect ratios, which is why Operational looked much larger
+       than Cyber and Financial looked wider than Supply Chain.
+       On mobile the collage becomes a plain 2x2 grid: every tile
+       is static, the same width, and a 1:1 square, so all four
+       photos are exactly the same size. DOM order already reads
+       Operational, Cyber, Financial, Supply Chain.
+       --------------------------------------------------------- */
+    .collage{
+      position:static;
+      min-height:0;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-top:6px;
+    }
+    .collage .tile,
+    .collage .tile-1,
+    .collage .tile-2,
+    .collage .tile-4,
+    .collage .tile-5{
+      position:relative;
+      top:auto; right:auto; bottom:auto; left:auto;
+      width:100%;
+      aspect-ratio:1/1;
+      box-shadow:0 12px 26px rgba(0,0,0,.45);
+    }
+    /* Financial tile holds an inline SVG chart rather than a photo —
+       keep it padded and centred so the square isn't edge-to-edge. */
+    .collage .tile-4{
+      display:flex; align-items:center; justify-content:center;
+      padding:18px;
+    }
+    .collage .tile-4 > svg{width:100%; height:auto; max-height:100%;}
+    .collage .tile-art svg{width:38%;}
+
     .feat-grid{grid-template-columns:1fr;}
     .gauge-wrap{grid-template-columns:1fr; text-align:center; padding:26px;}
     .gauge-wrap svg{margin:0 auto;}
@@ -880,9 +920,33 @@
     .timeline::before{display:none;}
     .tl-step{padding-left:22px; padding-top:0;}
     .tl-dot{top:4px;}
-    .dash-visual{min-height:auto; padding-bottom:60%;}
-    .dash-card{position:relative; top:0; left:0; width:100%; margin:20px;}
+
+    /* ---------------------------------------------------------
+       FIX 2 — RISK PROFILE CARD CENTRED ON MOBILE
+       Previously the card was width:100% *plus* a 20px margin, so
+       it ran past the right edge of the light panel, and the old
+       padding-bottom:60% left a large empty area underneath (the
+       chart mock is hidden on mobile). Now the card sizes itself
+       to the panel and is centred with equal spacing on all four
+       sides.
+       --------------------------------------------------------- */
+    .dash-visual{
+      min-height:0;
+      padding:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    .dash-card{
+      position:relative;
+      top:auto; left:auto;
+      width:auto;
+      max-width:400px;
+      margin:20px auto;
+      align-self:center;
+    }
     .dash-mock{display:none;}
+
     .big-num{font-size:70px;}
     .mini-chart{width:100%;}
     .test-grid{gap:30px;}

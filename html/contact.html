@@ -209,7 +209,7 @@
         <div class="form-row">
           <div class="form-group">
             <label for="cf-name">Full Name</label>
-            <input id="cf-name" type="text" required placeholder="Jordan Reyes">
+            <input id="cf-name" type="text" required placeholder="Jordan Reyes" pattern="[A-Za-z\s]+" title="Letters only, please." autocomplete="name">
           </div>
           <div class="form-group">
             <label for="cf-email">Work Email</label>
@@ -219,7 +219,7 @@
         <div class="form-row">
           <div class="form-group">
             <label for="cf-company">Company</label>
-            <input id="cf-company" type="text" required placeholder="Company name">
+            <input id="cf-company" type="text" required placeholder="Company name" pattern="[A-Za-z\s]+" title="Letters only, please." autocomplete="organization">
           </div>
           <div class="form-group">
             <label for="cf-size">Company Size</label>
@@ -754,6 +754,24 @@
 
     const form = document.getElementById('contactForm');
     const success = document.getElementById('formSuccess');
+
+    // Letters-only fields: strip anything that isn't a letter or space as the user types.
+    const lettersOnlyFields = [
+      document.getElementById('cf-name'),
+      document.getElementById('cf-company')
+    ];
+    lettersOnlyFields.forEach(function(field){
+      if(!field) return;
+      field.addEventListener('input', function(){
+        const cleaned = field.value.replace(/[^A-Za-z\s]/g, '');
+        if(cleaned !== field.value){
+          const pos = field.selectionStart - (field.value.length - cleaned.length);
+          field.value = cleaned;
+          if(typeof pos === 'number') field.setSelectionRange(pos, pos);
+        }
+      });
+    });
+
     if(form){
       form.addEventListener('submit', function(e){
         e.preventDefault();
