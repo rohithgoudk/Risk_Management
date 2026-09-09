@@ -18,6 +18,15 @@
 </head>
 <body>
 
+<!-- ============ PRELOADER ============ -->
+<div class="preloader" id="preloader">
+  <div class="preloader-inner">
+    <div class="preloader-ring"></div>
+    <div class="preloader-word">STACKLY</div>
+    <div class="preloader-bar"><div class="preloader-bar-fill" id="preloaderFill"></div></div>
+  </div>
+</div>
+
 <div class="scroll-progress" id="scrollProgress"></div>
 
 <!-- ============ HEADER ============ -->
@@ -116,6 +125,9 @@
       <div class="pick-card">
         <div class="pick-card-inner">
           <div class="pick-card-face pick-card-front">
+            <div class="pick-img pick-img-1">
+              <img src="../assets/B1.webp" alt="" loading="lazy">
+            </div>
             <span class="blog-tag">Deep Analysis</span>
             <h3>The False Comfort of Quarterly Risk Reviews</h3>
             <p>Why a risk posture that's only reassessed four times a year is already out of date by the second week.</p>
@@ -132,6 +144,9 @@
       <div class="pick-card">
         <div class="pick-card-inner">
           <div class="pick-card-face pick-card-front">
+            <div class="pick-img pick-img-2">
+              <img src="../assets/B2.webp" alt="" loading="lazy">
+            </div>
             <span class="blog-tag">Case Study</span>
             <h3>How a Mid-Size Lender Cut Exposure 41%</h3>
             <p>A walkthrough of the signal sources and mitigation sequence behind one of our largest year-over-year gains.</p>
@@ -148,6 +163,9 @@
       <div class="pick-card">
         <div class="pick-card-inner">
           <div class="pick-card-face pick-card-front">
+            <div class="pick-img pick-img-3">
+              <img src="../assets/B3.webp" alt="" loading="lazy">
+            </div>
             <span class="blog-tag">Research Note</span>
             <h3>Reading Confidence Scores Under Pressure</h3>
             <p>A short guide for teams tempted to override a high-confidence signal during a live incident.</p>
@@ -436,6 +454,54 @@
 
 <script>
   gsap.registerPlugin(ScrollTrigger);
+
+  /* =========================================================
+     PRELOADER — shown on initial page load, with a minimum
+     visible time so it reads as a loading screen rather than
+     a flicker. Also replayed briefly when leaving for Home.
+     ========================================================= */
+  const stacklyPreloader = (function(){
+    const el = document.getElementById('preloader');
+    const fill = document.getElementById('preloaderFill');
+    if(!el) return { show: function(){}, hide: function(){} };
+
+    function fillBar(duration){
+      gsap.killTweensOf(fill);
+      gsap.fromTo(fill, { width: '0%' }, { width: '100%', duration: duration, ease: 'power1.inOut' });
+    }
+    function show(){
+      el.classList.remove('hide');
+      fillBar(0.6);
+    }
+    function hide(){
+      el.classList.add('hide');
+    }
+
+    const MIN_VISIBLE_MS = 900;
+    const startedAt = Date.now();
+    fillBar(1.2);
+    function finishInitialLoad(){
+      const elapsed = Date.now() - startedAt;
+      setTimeout(hide, Math.max(0, MIN_VISIBLE_MS - elapsed));
+    }
+    if(document.readyState === 'complete'){
+      finishInitialLoad();
+    } else {
+      window.addEventListener('load', finishInitialLoad);
+    }
+    // Safety net in case 'load' never fires for some reason.
+    setTimeout(hide, 4000);
+
+    return { show: show, hide: hide };
+  })();
+
+  (function(){
+    document.querySelectorAll('a[href="index.html#hero"], .logo').forEach(function(link){
+      link.addEventListener('click', function(){
+        stacklyPreloader.show();
+      });
+    });
+  })();
 
   /* =========================================================
      ALWAYS OPEN AT THE TOP ON REFRESH

@@ -749,10 +749,10 @@
   .picks-section{padding:90px 0; border-bottom:1px solid var(--border-soft);}
   .picks-section .eyebrow{margin-bottom:36px;}
   .picks-grid{display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--border-soft);}
-  .pick-card{ min-height:230px; perspective:1200px; cursor:pointer; border-right:1px solid var(--border-soft);}
+  .pick-card{ min-height:420px; perspective:1200px; cursor:pointer; border-right:1px solid var(--border-soft);}
   .picks-grid .pick-card:last-child{border-right:none;}
   .pick-card-inner{
-    position:relative; width:100%; height:100%; min-height:230px;
+    position:relative; width:100%; height:100%; min-height:420px;
     transform-style:preserve-3d; transition:transform .5s ease;
   }
   .pick-card.flipped .pick-card-inner{ transform:rotateY(180deg); }
@@ -774,6 +774,34 @@
   }
   .pick-card-back h3{color:var(--magenta-bright);}
   .pick-cta{font-size:13px; font-weight:600; color:var(--magenta-bright); margin-top:auto;}
+
+  /* Editor's Picks — photo header on the front face, tinted per card */
+  .pick-img{
+    position:relative;
+    width:100%;
+    aspect-ratio:16/10;
+    border-radius:4px;
+    overflow:hidden;
+    margin-bottom:20px;
+    flex-shrink:0;
+    background:#111;
+  }
+  .pick-img img{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit:cover;
+    filter:saturate(1.05) grayscale(.1);
+    transition:transform .5s cubic-bezier(.2,.8,.2,1);
+  }
+  .pick-card:hover .pick-img img{ transform:scale(1.07); }
+  .pick-img::after{
+    content:"";
+    position:absolute; inset:0;
+    mix-blend-mode:multiply;
+  }
+  .pick-img-1::after{ background:linear-gradient(150deg, rgba(18,59,63,.85), rgba(23,182,201,.55)); }
+  .pick-img-2::after{ background:linear-gradient(150deg, rgba(42,23,48,.85), rgba(124,95,190,.55)); }
+  .pick-img-3::after{ background:linear-gradient(150deg, rgba(15,37,64,.85), rgba(43,122,217,.55)); }
   
   /* -- 3. Risk Signals -- */
   .signals-section{padding:90px 0; border-bottom:1px solid var(--border-soft); background:var(--bg-alt);}
@@ -1160,4 +1188,7 @@
     .sector-cell{border-right:none;}
     .digest-form{flex-direction:column;}
     .digest-form .btn{width:100%; justify-content:center;}
+
+    .pick-card{ min-height:440px; }
+    .pick-card-inner{ min-height:440px; }
   }

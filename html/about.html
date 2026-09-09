@@ -18,6 +18,15 @@
 </head>
 <body>
 
+<!-- ============ PRELOADER ============ -->
+<div class="preloader" id="preloader">
+  <div class="preloader-inner">
+    <div class="preloader-ring"></div>
+    <div class="preloader-word">STACKLY</div>
+    <div class="preloader-bar"><div class="preloader-bar-fill" id="preloaderFill"></div></div>
+  </div>
+</div>
+
 <div class="scroll-progress" id="scrollProgress"></div>
 
 <!-- ============ HEADER ============ -->
@@ -99,45 +108,55 @@
   </div>
 </section>
 
-<!-- ============ 3. TIMELINE / COMPANY HISTORY ============ -->
+<!-- ============ 3. TIMELINE / COMPANY HISTORY (TABLE) ============ -->
 <section class="history-section">
   <div class="wrap">
-    <div class="milestone-list" id="milestoneList">
-      <div class="milestone-row">
-        <span class="milestone-year">2019</span>
-        <div class="milestone-text">
-          <h3>A supplier failure, and a spreadsheet that couldn't keep up</h3>
-          <p>Founders Mara Ilić and Tom Okafor were running risk for a mid-size logistics operator when a single-supplier dependency they'd flagged too late cost the company a full quarter's margin.</p>
-        </div>
-      </div>
-      <div class="milestone-row">
-        <span class="milestone-year">2020</span>
-        <div class="milestone-text">
-          <h3>Stackly begins as an internal system</h3>
-          <p>The first version of the risk matrix was built to track exposure across their own supply chain — not to sell, just to never be caught off guard again.</p>
-        </div>
-      </div>
-      <div class="milestone-row">
-        <span class="milestone-year">2022</span>
-        <div class="milestone-text">
-          <h3>Opened to the first outside customers</h3>
-          <p>Word spread among peers in operations and finance. Stackly left the building it was built in and became a product.</p>
-        </div>
-      </div>
-      <div class="milestone-row">
-        <span class="milestone-year">2024</span>
-        <div class="milestone-text">
-          <h3>Cyber and compliance modules added</h3>
-          <p>Customers asked for the same clarity applied to regulatory change and digital exposure. Two new categories joined the matrix.</p>
-        </div>
-      </div>
-      <div class="milestone-row">
-        <span class="milestone-year">2026</span>
-        <div class="milestone-text">
-          <h3>1,240+ organizations now run on Stackly</h3>
-          <p>From single-site manufacturers to global financial institutions, all watching the same kind of signal, before it becomes a problem.</p>
-        </div>
-      </div>
+    <div class="history-head">
+      <h2>The road to now.</h2>
+      <p class="section-sub">Five moments that shaped what Stackly watches for today.</p>
+    </div>
+
+    <div class="milestone-table-wrap">
+      <table class="milestone-table" id="milestoneTable">
+        <caption class="sr-only">Stackly company milestones by year</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="col-year">Year</th>
+            <th scope="col" class="col-title">Milestone</th>
+            <th scope="col" class="col-detail">What changed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-year"><span class="milestone-year">2019</span></td>
+            <td class="col-title"><span class="milestone-title">A supplier failure, and a spreadsheet that couldn't keep up</span></td>
+            <td class="col-detail">Founders Mara Ilić and Tom Okafor were running risk for a mid-size logistics operator when a single-supplier dependency they'd flagged too late cost the company a full quarter's margin.</td>
+          </tr>
+          <tr>
+            <td class="col-year"><span class="milestone-year">2020</span></td>
+            <td class="col-title"><span class="milestone-title">Stackly begins as an internal system</span></td>
+            <td class="col-detail">The first version of the risk matrix was built to track exposure across their own supply chain — not to sell, just to never be caught off guard again.</td>
+          </tr>
+          <tr>
+            <td class="col-year"><span class="milestone-year">2022</span></td>
+            <td class="col-title"><span class="milestone-title">Opened to the first outside customers</span></td>
+            <td class="col-detail">Word spread among peers in operations and finance. Stackly left the building it was built in and became a product.</td>
+          </tr>
+          <tr>
+            <td class="col-year"><span class="milestone-year">2024</span></td>
+            <td class="col-title"><span class="milestone-title">Cyber and compliance modules added</span></td>
+            <td class="col-detail">Customers asked for the same clarity applied to regulatory change and digital exposure. Two new categories joined the matrix.</td>
+          </tr>
+          <tr class="is-current">
+            <td class="col-year"><span class="milestone-year">2026</span></td>
+            <td class="col-title">
+              <span class="milestone-title">1,240+ organizations now run on Stackly</span>
+              <span class="milestone-tag">Today</span>
+            </td>
+            <td class="col-detail">From single-site manufacturers to global financial institutions, all watching the same kind of signal, before it becomes a problem.</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
@@ -235,28 +254,28 @@
     <div class="team-grid">
       <div class="team-card">
         <div class="team-photo">
-          <img src="https://images.unsplash.com/photo-1581065178047-8ee15951ede6?q=80&amp;w=500&amp;auto=format&amp;fit=crop" alt="Mara Ilić">
+          <img src="../assets/A1.webp" alt="Mara Ilić">
         </div>
         <div class="team-name">Mara Ilić</div>
         <div class="team-role">Co-Founder &amp; CEO</div>
       </div>
       <div class="team-card">
         <div class="team-photo">
-          <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&amp;w=500&amp;auto=format&amp;fit=crop" alt="Tom Okafor">
+          <img src="../assets/A2.webp" alt="Tom Okafor">
         </div>
         <div class="team-name">Tom Okafor</div>
         <div class="team-role">Co-Founder &amp; CTO</div>
       </div>
       <div class="team-card">
         <div class="team-photo">
-          <img src="https://images.unsplash.com/photo-1607990283143-e81e7a2c9349?q=80&amp;w=500&amp;auto=format&amp;fit=crop" alt="Priya Nadar">
+          <img src="../assets/A3.webp" alt="Priya Nadar">
         </div>
         <div class="team-name">Priya Nadar</div>
         <div class="team-role">Chief Risk Officer</div>
       </div>
       <div class="team-card">
         <div class="team-photo">
-          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&amp;w=500&amp;auto=format&amp;fit=crop" alt="Daniel Voss">
+          <img src="../assets/A4.webp" alt="Daniel Voss">
         </div>
         <div class="team-name">Daniel Voss</div>
         <div class="team-role">VP, Engineering</div>
@@ -368,6 +387,54 @@
 
 <script>
   gsap.registerPlugin(ScrollTrigger);
+
+  /* =========================================================
+     PRELOADER — shown on initial page load, with a minimum
+     visible time so it reads as a loading screen rather than
+     a flicker. Also replayed briefly when leaving for Home.
+     ========================================================= */
+  const stacklyPreloader = (function(){
+    const el = document.getElementById('preloader');
+    const fill = document.getElementById('preloaderFill');
+    if(!el) return { show: function(){}, hide: function(){} };
+
+    function fillBar(duration){
+      gsap.killTweensOf(fill);
+      gsap.fromTo(fill, { width: '0%' }, { width: '100%', duration: duration, ease: 'power1.inOut' });
+    }
+    function show(){
+      el.classList.remove('hide');
+      fillBar(0.6);
+    }
+    function hide(){
+      el.classList.add('hide');
+    }
+
+    const MIN_VISIBLE_MS = 900;
+    const startedAt = Date.now();
+    fillBar(1.2);
+    function finishInitialLoad(){
+      const elapsed = Date.now() - startedAt;
+      setTimeout(hide, Math.max(0, MIN_VISIBLE_MS - elapsed));
+    }
+    if(document.readyState === 'complete'){
+      finishInitialLoad();
+    } else {
+      window.addEventListener('load', finishInitialLoad);
+    }
+    // Safety net in case 'load' never fires for some reason.
+    setTimeout(hide, 4000);
+
+    return { show: show, hide: hide };
+  })();
+
+  (function(){
+    document.querySelectorAll('a[href="index.html#hero"], .logo').forEach(function(link){
+      link.addEventListener('click', function(){
+        stacklyPreloader.show();
+      });
+    });
+  })();
 
   /* =========================================================
      ALWAYS OPEN AT THE TOP ON REFRESH
@@ -559,16 +626,29 @@
   })();
 
   /* =========================================================
-     TIMELINE — milestone rows slide in, year counts into focus
+     MILESTONE TABLE
+     Rows fade up one after another as the table scrolls into
+     view, and the magenta rail running down the Year column
+     draws itself from top to bottom as it does.
      ========================================================= */
   (function(){
-    const rows = gsap.utils.toArray('.milestone-row');
-    rows.forEach(function(row, i){
-      gsap.fromTo(row, { opacity: 0, x: -30 }, {
-        opacity: 1, x: 0, duration: 0.7, ease: 'power3.out',
-        scrollTrigger: { trigger: row, start: 'top 85%', once: true }
-      });
+    const table = document.getElementById('milestoneTable');
+    if(!table) return;
+
+    const rows = gsap.utils.toArray('#milestoneTable tbody tr');
+    gsap.fromTo(rows, { opacity: 0, y: 18 }, {
+      opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out',
+      scrollTrigger: { trigger: table, start: 'top 85%', once: true }
     });
+
+    // Draw the timeline rail as the rows arrive.
+    const wrap = table.closest('.milestone-table-wrap');
+    if(wrap){
+      ScrollTrigger.create({
+        trigger: table, start: 'top 85%', once: true,
+        onEnter: function(){ wrap.classList.add('rail-drawn'); }
+      });
+    }
   })();
 
   /* =========================================================
@@ -644,6 +724,7 @@
      ========================================================= */
   (function(){
     const revealGroups = [
+      '.history-head h2', '.history-head .section-sub',
       '.values-section h2', '.team-head h2', '.team-head .section-sub', '.about-cta-section h2'
     ];
     revealGroups.forEach(function(sel){

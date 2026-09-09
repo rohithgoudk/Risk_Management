@@ -20,6 +20,15 @@
 </head>
 <body>
 
+<!-- ============ PRELOADER ============ -->
+<div class="preloader" id="preloader">
+  <div class="preloader-inner">
+    <div class="preloader-ring"></div>
+    <div class="preloader-word">STACKLY</div>
+    <div class="preloader-bar"><div class="preloader-bar-fill" id="preloaderFill"></div></div>
+  </div>
+</div>
+
 <div class="scroll-progress" id="scrollProgress"></div>
 
 <!-- ============ HEADER ============ -->
@@ -113,14 +122,14 @@
         </a>
       </div>
       <div class="service-media">
-        <img src="https://images.unsplash.com/photo-1543132220-3ec99c6094dc?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Enterprise risk">
+        <img src="../assets/S1.webp" alt="Enterprise risk">
         <span class="service-media-tag">Enterprise Risk</span>
       </div>
     </div>
 
     <div class="service-row reverse" id="service-operational">
       <div class="service-media">
-        <img src="https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Operational risk">
+        <img src="../assets/S2.webp" alt="Operational risk">
         <span class="service-media-tag">Operational Risk</span>
       </div>
       <div class="service-text">
@@ -151,14 +160,14 @@
         </a>
       </div>
       <div class="service-media">
-        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Financial risk">
+        <img src="../assets/S3.webp" alt="Financial risk">
         <span class="service-media-tag">Financial Risk</span>
       </div>
     </div>
 
     <div class="service-row reverse" id="service-compliance">
       <div class="service-media">
-        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Compliance risk">
+        <img src="../assets/S4.webp" alt="Compliance risk">
         <span class="service-media-tag">Compliance Risk</span>
       </div>
       <div class="service-text">
@@ -189,7 +198,7 @@
         </a>
       </div>
       <div class="service-media">
-        <img src="https://images.unsplash.com/photo-1614064642261-3ccbfafa481b?q=80&amp;w=900&amp;auto=format&amp;fit=crop" alt="Cyber risk">
+        <img src="../assets/S5.webp" alt="Cyber risk">
         <span class="service-media-tag">Cyber Risk</span>
       </div>
     </div>
@@ -351,6 +360,55 @@
 
   gsap.registerPlugin(ScrollTrigger);
 
+  /* =========================================================
+     PRELOADER — shown on initial page load (with a minimum
+     visible time so it doesn't just flash), and briefly replayed
+     when navigating back Home via the logo or the Home nav link.
+     ========================================================= */
+  const stacklyPreloader = (function(){
+    const el = document.getElementById('preloader');
+    const fill = document.getElementById('preloaderFill');
+    if(!el) return { show: function(){}, hide: function(){} };
+
+    function fillBar(duration){
+      gsap.killTweensOf(fill);
+      gsap.fromTo(fill, { width: '0%' }, { width: '100%', duration: duration, ease: 'power1.inOut' });
+    }
+    function show(){
+      el.classList.remove('hide');
+      fillBar(0.6);
+    }
+    function hide(){
+      el.classList.add('hide');
+    }
+
+    // Initial load: keep it visible for a minimum stretch so it
+    // reads as a real loading screen rather than a flicker.
+    const MIN_VISIBLE_MS = 900;
+    const startedAt = Date.now();
+    fillBar(1.2);
+    function finishInitialLoad(){
+      const elapsed = Date.now() - startedAt;
+      setTimeout(hide, Math.max(0, MIN_VISIBLE_MS - elapsed));
+    }
+    if(document.readyState === 'complete'){
+      finishInitialLoad();
+    } else {
+      window.addEventListener('load', finishInitialLoad);
+    }
+    // Safety net in case 'load' never fires for some reason.
+    setTimeout(hide, 4000);
+
+    return { show: show, hide: hide };
+  })();
+
+  (function(){
+    document.querySelectorAll('a[href="index.html#hero"], .logo').forEach(function(link){
+      link.addEventListener('click', function(){
+        stacklyPreloader.show();
+      });
+    });
+  })();
 
   /* =========================================================
      ALWAYS OPEN AT THE TOP ON REFRESH.
